@@ -151,6 +151,21 @@ canvas{display:block}
 /* PLAYERS LIST (multiplayer) */
 #plist{position:fixed;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:11;pointer-events:none}
 .ptag{background:rgba(5,3,15,.85);border:1px solid rgba(200,160,60,.3);border-radius:20px;padding:3px 10px;font-size:.68rem;color:rgba(255,255,255,.7)}
+
+/* CHAT */
+#chat{position:fixed;bottom:82px;right:14px;width:280px;z-index:12;display:flex;flex-direction:column;gap:4px}
+#chatlog{height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding:4px 0}
+#chatlog::-webkit-scrollbar{width:3px}
+#chatlog::-webkit-scrollbar-thumb{background:rgba(255,215,0,.3);border-radius:2px}
+.cmsg{font-size:.72rem;padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.65);line-height:1.4;word-break:break-word}
+.cmsg .ctag{font-size:.62rem;font-weight:bold;margin-right:4px;padding:1px 5px;border-radius:3px;background:rgba(0,0,0,.4)}
+.cmsg.announce{border-left:3px solid #ff4040;color:#ff8080;font-style:italic}
+.cmsg.bossup{border-left:3px solid #ff0000;color:#ff6060}
+.cmsg.bossdown{border-left:3px solid #ffd700;color:#ffd700}
+#chatrow{display:flex;gap:5px}
+#chatinput{flex:1;background:rgba(5,3,15,.9);border:1px solid rgba(200,160,60,.35);border-radius:4px;padding:6px 8px;font-size:.75rem;color:#fff;outline:none;font-family:Georgia,serif}
+#chatinput:focus{border-color:#ffd700}
+#chatsend{background:linear-gradient(135deg,#ffd700,#ff8800);border:none;border-radius:4px;padding:6px 10px;cursor:pointer;font-size:.75rem;font-weight:bold;color:#000}
 </style>
 </head>
 <body>
@@ -260,6 +275,15 @@ canvas{display:block}
 <div id="savetoast">Game Saved ✓</div>
 <!-- PLAYER TAGS -->
 <div id="plist"></div>
+
+<!-- CHAT -->
+<div id="chat">
+  <div id="chatlog"></div>
+  <div id="chatrow">
+    <input id="chatinput" maxlength="120" placeholder="Press T to chat..." autocomplete="off">
+    <button id="chatsend">➤</button>
+  </div>
+</div>
 
 <script>
 // ── HELPERS ──
@@ -898,6 +922,46 @@ function drawP(){
   ctx.font='21px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.ico,p.x,p.y+b);
   ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+Math.cos(p.facing)*27,p.y+Math.sin(p.facing)*27);ctx.stroke();
+
+  // ── TITLES ABOVE HEAD ──
+  var ht=htitle(p.honor);
+  var br=brank(p.bounty);
+  var yBase=p.y-30;
+
+  // Honor title (gold, top)
+  if(ht.s>0){
+    ctx.font='bold 10px Georgia,serif';
+    ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    var htxt='✦ '+ht.t+' ✦';
+    ctx.shadowColor='#ffd700';ctx.shadowBlur=8;
+    ctx.fillStyle='#ffd700';
+    ctx.fillText(htxt,p.x,yBase-22);
+    ctx.shadowBlur=0;
+  }
+
+  // Bounty rank (red, below honor title)
+  if(p.bounty>=10000){
+    ctx.font='bold 10px Georgia,serif';
+    ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.shadowColor=br.c;ctx.shadowBlur=8;
+    ctx.fillStyle=br.c;
+    ctx.fillText('⚔ '+br.n,p.x,yBase-10);
+    ctx.shadowBlur=0;
+  }
+
+  // Player name
+  ctx.font='bold 11px Georgia,serif';
+  ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  ctx.fillStyle='rgba(255,255,255,.85)';
+  ctx.fillText(p.name,p.x,yBase);
+
+  // Stars row
+  if(ht.s>0){
+    ctx.font='9px serif';
+    ctx.fillStyle='#ffd700';
+    ctx.fillText('★'.repeat(ht.s)+'☆'.repeat(5-ht.s),p.x,yBase+10);
+  }
+
   ctx.textBaseline='alphabetic';ctx.textAlign='left';
 }
 function drawPrjs(){
@@ -966,7 +1030,7 @@ function mkBosses(){
   BOSSES=[];
   for(var i=0;i<BOSS_DEFS.length;i++){
     var bd=BOSS_DEFS[i],z=ZONES[bd.zone];
-    var bx=z.x+z.w/2,by=z.y+z.h/2;
+    var bx=z.x+rnd(80,z.w-80),by=z.y+rnd(80,z.h-80);
     BOSSES.push({
       def:bd,name:bd.name,ico:bd.ico,col:bd.col,
       x:bx,y:by,sx:bx,sy:by,
@@ -974,8 +1038,12 @@ function mkBosses(){
       bty:bd.bty,hon:bd.hon,gold:bd.gold,xp:bd.xp,r:bd.r,
       dead:false,rt:0,aggro:false,atimer:0,stun:0,
       phase:1,ptimer:0,enraged:false,
-      ar:350,isBoss:true
+      ar:350,isBoss:true,zone:bd.zone
     });
+    // Announce initial spawn after a short delay
+    (function(boss){
+      setTimeout(function(){bossAnnounce('spawn',boss);},2000+i*400);
+    })(BOSSES[BOSSES.length-1]);
   }
 }
 
@@ -986,7 +1054,13 @@ function updBosses(dt){
     var b=BOSSES[i];
     if(b.dead){
       b.rt-=dt;
-      if(b.rt<=0){b.dead=false;b.hp=b.mhp;b.x=b.sx;b.y=b.sy;b.enraged=false;b.phase=1;}
+      if(b.rt<=0){
+        var z=ZONES[b.def.zone];
+        b.x=z.x+rnd(80,z.w-80);b.y=z.y+rnd(80,z.h-80);
+        b.sx=b.x;b.sy=b.y;
+        b.dead=false;b.hp=b.mhp;b.enraged=false;b.phase=1;
+        bossAnnounce('spawn',b);
+      }
       continue;
     }
     var d=dst(b,P);
@@ -1059,6 +1133,7 @@ function killBoss(b){
   addLog('+'+b.hon+' honor  +'+b.gold+' gold  +'+b.xp+' XP','o');
   chkMile(ob,P.bounty);updBounty(P.bounty,P.honor);chkLvl();
   showMile(P.bounty);
+  bossAnnounce('kill',b);
   saveGame();
 }
 
@@ -1192,8 +1267,11 @@ function mpHandleData(pid,data){
   if(data.type==='state'){
     mpPeers[pid]=data;
     updPeerTags();
+  } else if(data.type==='chat'){
+    addChat(data.tag+': <span style="color:rgba(255,255,255,.85)">'+data.txt+'</span>','');
+  } else if(data.type==='announce'){
+    addChat(data.html,data.atype);
   } else if(data.type==='hit'){
-    // Remote player hit an enemy
     for(var i=0;i<ENS.length;i++){
       if(!ENS[i].dead&&Math.abs(ENS[i].x-data.ex)<5&&Math.abs(ENS[i].y-data.ey)<5){
         hitEnemy(ENS[i],data.dmg);break;
@@ -1218,7 +1296,7 @@ function mpSendState(){
   var now=performance.now();
   if(now-mpLastSend<MP_SEND_INTERVAL)return;
   mpLastSend=now;
-  mpSend({type:'state',x:P.x,y:P.y,ico:P.ico,col:P.col,name:P.name,hp:P.hp,mhp:P.mhp,facing:P.facing});
+  mpSend({type:'state',x:P.x,y:P.y,ico:P.ico,col:P.col,name:P.name,hp:P.hp,mhp:P.mhp,facing:P.facing,honor:P.honor,bounty:P.bounty});
 }
 
 function mpSendHit(ex,ey,dmg){
@@ -1244,10 +1322,101 @@ function drawPeers(){
     ctx.fillStyle=d.col||'#fff';ctx.beginPath();ctx.arc(d.x,d.y,18,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
     ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.ico||'👤',d.x,d.y);
-    ctx.fillStyle='rgba(255,255,255,.6)';ctx.font='9px Georgia,serif';ctx.fillText(d.name,d.x,d.y-26);
+
+    // Titles above peer head
+    var pht=d.honor?htitle(d.honor):{s:0,t:''};
+    var pbr=d.bounty?brank(d.bounty):{n:'',c:'#fff'};
+    var yb=d.y-28;
+    if(pht.s>0){
+      ctx.font='bold 10px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+      ctx.shadowColor='#ffd700';ctx.shadowBlur=7;ctx.fillStyle='#ffd700';
+      ctx.fillText('✦ '+pht.t+' ✦',d.x,yb-22);ctx.shadowBlur=0;
+    }
+    if(d.bounty>=10000){
+      ctx.font='bold 10px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+      ctx.shadowColor=pbr.c;ctx.shadowBlur=7;ctx.fillStyle=pbr.c;
+      ctx.fillText('⚔ '+pbr.n,d.x,yb-10);ctx.shadowBlur=0;
+    }
+    ctx.font='bold 11px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.fillStyle='rgba(255,255,255,.8)';ctx.fillText(d.name,d.x,yb);
+    if(pht.s>0){ctx.font='9px serif';ctx.fillStyle='#ffd700';ctx.fillText('★'.repeat(pht.s)+'☆'.repeat(5-pht.s),d.x,yb+10);}
     ctx.textBaseline='alphabetic';ctx.textAlign='left';
   }
 }
+// ── CHAT ──
+var chatOpen=false;
+
+function chatTag(){
+  if(!P)return'';
+  var br=brank(P.bounty),ht=htitle(P.honor);
+  var tag='';
+  if(P.bounty>=10000)tag+='<span class="ctag" style="color:'+br.c+';border:1px solid '+br.c+'">'+br.n+'</span>';
+  if(ht.s>0)tag+='<span class="ctag" style="color:#ffd700;border:1px solid #ffd700">'+ht.t+'</span>';
+  tag+='<span style="color:'+P.col+'">'+P.ico+' '+P.name+'</span>';
+  return tag;
+}
+
+function addChat(html,type){
+  var log=g('chatlog');
+  var el=document.createElement('div');
+  el.className='cmsg'+(type?' '+type:'');
+  el.innerHTML=html;
+  log.appendChild(el);
+  // Keep max 60 messages
+  while(log.children.length>60)log.removeChild(log.firstChild);
+  log.scrollTop=log.scrollHeight;
+}
+
+function sendChat(txt){
+  if(!txt||!txt.trim())return;
+  txt=txt.trim().slice(0,120);
+  var tag=chatTag();
+  var html=tag+': <span style="color:rgba(255,255,255,.85)">'+escHtml(txt)+'</span>';
+  addChat(html,'');
+  // Broadcast to peers
+  mpSend({type:'chat',tag:tag,txt:escHtml(txt)});
+}
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function bossAnnounce(ev,b){
+  var zoneName=ZONES[b.def.zone].name;
+  var html,type;
+  if(ev==='spawn'){
+    html='<span style="color:#ff6060">⚠ BOSS SPAWNED</span> — '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> has appeared in <b>'+zoneName+'</b>!';
+    type='bossup';
+  } else {
+    var killer=P?chatTag():'Unknown';
+    html='<span style="color:#ffd700">☠ BOSS SLAIN</span> — '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> was defeated by '+killer+' in <b>'+zoneName+'</b>!';
+    type='bossdown';
+  }
+  addChat(html,type);
+  mpSend({type:'announce',html:html,atype:type});
+}
+
+// Chat input toggle with T key
+window.addEventListener('keydown',function(e){
+  if(!running)return;
+  if(e.key==='t'||e.key==='T'){
+    if(document.activeElement!==g('chatinput')){
+      e.preventDefault();
+      g('chatinput').focus();
+    }
+  }
+  if(e.key==='Escape'&&document.activeElement===g('chatinput')){
+    g('chatinput').blur();
+  }
+});
+
+g('chatsend').addEventListener('click',function(){
+  var inp=g('chatinput');sendChat(inp.value);inp.value='';inp.blur();
+});
+g('chatinput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){sendChat(this.value);this.value='';this.blur();e.stopPropagation();}
+  e.stopPropagation(); // prevent game keys while typing
+});
 
 </script>
 </body>
