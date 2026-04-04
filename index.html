@@ -257,16 +257,29 @@ canvas{display:block}
 
 <!-- MULTIPLAYER PANEL -->
 <div id="mppanel" class="hide">
-  <div class="mpbox">
+  <div class="mpbox" style="min-width:400px;max-width:92vw">
     <h2>Multiplayer</h2>
-    <p>Share your Room ID with a friend, or enter theirs to join.</p>
-    <div class="mprow"><span style="font-size:.75rem;color:rgba(255,255,255,.5)">Your ID:</span><span id="mp-myid" title="Click to copy">Connecting...</span></div>
-    <div class="mprow">
-      <input class="mpinput" id="mp-joinid" placeholder="Enter friend's ID..." maxlength="20">
-      <button class="btn" id="btn-mpjoin" style="padding:10px 18px">Join</button>
+    <!-- SERVER SELECT -->
+    <div id="mp-srv-sel" style="width:100%">
+      <p style="margin-bottom:10px">Choose a server to join:</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-bottom:12px" id="srv-grid"></div>
+      <div style="display:flex;gap:8px;align-items:center;width:100%">
+        <input class="mpinput" id="mp-custom-srv" placeholder="Custom server ID..." maxlength="30" style="flex:1">
+        <button class="btn" id="btn-custom-srv" style="padding:10px 14px;white-space:nowrap">Join Custom</button>
+      </div>
     </div>
-    <div id="mp-status">Not connected</div>
-    <div id="mp-peers"></div>
+    <!-- CONNECTED VIEW -->
+    <div id="mp-connected" style="display:none;width:100%;flex-direction:column;align-items:center;gap:10px">
+      <div style="font-size:.8rem;color:#40c060">Connected to: <span id="mp-srv-name" style="color:#ffd700"></span></div>
+      <div class="mprow"><span style="font-size:.75rem;color:rgba(255,255,255,.5)">Your Room ID:</span><span id="mp-myid" title="Click to copy" style="cursor:pointer">Connecting...</span></div>
+      <div class="mprow">
+        <input class="mpinput" id="mp-joinid" placeholder="Enter player ID to connect..." maxlength="30">
+        <button class="btn" id="btn-mpjoin" style="padding:10px 14px">Connect</button>
+      </div>
+      <div id="mp-status" style="font-size:.75rem;color:rgba(255,255,255,.5)">Not connected to any player</div>
+      <div id="mp-peers" style="font-size:.75rem;color:#40c060"></div>
+      <button class="mbtn" id="btn-mpleave">Leave Server</button>
+    </div>
     <button class="mbtn" id="btn-mpclose">Close</button>
   </div>
 </div>
@@ -345,10 +358,10 @@ var CLS=[
    tags:['Critical Hits','Stealth','High Speed'],
    st:{hp:95,mp:80,atk:22,def:7,spd:5},
    sk:[
-    {n:'Backstab',i:'🗡️',cd:1.5,mp:15,dm:3,rng:60,t:'melee',col:'#808080',d:'Deals massive damage up close.'},
-    {n:'Smoke Bomb',i:'💨',cd:8,mp:25,dm:0,rng:100,t:'aoe',col:'#404040',d:'Blinds nearby enemies.'},
-    {n:'Shadow Dash',i:'💨',cd:6,mp:20,dm:2.5,rng:200,t:'dash',col:'#606060',d:'Dashes through enemies dealing damage.'},
-    {n:'Death Mark',i:'💀',cd:22,mp:60,dm:8,rng:300,t:'exec',col:'#ff2020',d:'Marks an enemy for instant death.'}
+    {n:'Backstab',i:'🗡️',cd:0.4,mp:10,dm:3,rng:60,t:'melee',col:'#808080',d:'Deals massive damage up close.'},
+    {n:'Smoke Bomb',i:'💨',cd:6,mp:20,dm:0,rng:100,t:'aoe',col:'#404040',d:'Blinds nearby enemies.'},
+    {n:'Shadow Dash',i:'💨',cd:4,mp:15,dm:2.5,rng:200,t:'dash',col:'#606060',d:'Dashes through enemies dealing damage.'},
+    {n:'Death Mark',i:'💀',cd:15,mp:50,dm:8,rng:300,t:'exec',col:'#ff2020',d:'Marks an enemy for instant death.'}
    ]},
   {id:'swordsman',name:'Swordsman',ico:'⚔️',role:'Warrior',col:'#c08040',
    desc:'A master of the blade. Raw power and disciplined technique dominate the battlefield.',
@@ -519,18 +532,28 @@ function addLog(txt,tp){
 }
 function firePrj(ox,oy,tx,ty,dmg,col,spd,rad,own){
   var a=Math.atan2(ty-oy,tx-ox);
-  projs.push({x:ox,y:oy,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,dmg:dmg,col:col,rad:rad,own:own||'p',life:1,dec:.008});
+  // Add a glowing trail effect by storing angle
+  projs.push({x:ox,y:oy,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,dmg:dmg,col:col,rad:rad,own:own||'p',life:1,dec:.008,angle:a,trail:[]});
 }
 function spawnVFX(x,y,col,cnt,spd){
   cnt=cnt||8;spd=spd||3;
   for(var i=0;i<cnt;i++){
     var a=rnd(0,Math.PI*2),s=rnd(spd*.5,spd);
-    vfx.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,col:col,life:1,dec:rnd(.02,.05),r:rnd(2,5)});
+    vfx.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,col:col,life:1,dec:rnd(.02,.05),r:rnd(2,6)});
   }
 }
 function spawnRing(x,y,rad,col){
-  vfx.push({x:x,y:y,ring:true,r:10,mr:rad,col:col,life:1,dec:.03});
-  spawnVFX(x,y,col,12,5);
+  // Multi-ring burst for more impact
+  vfx.push({x:x,y:y,ring:true,r:8,mr:rad,col:col,life:1,dec:.025});
+  vfx.push({x:x,y:y,ring:true,r:4,mr:rad*.6,col:col,life:.8,dec:.035});
+  spawnVFX(x,y,col,16,6);
+}
+function spawnSlash(x,y,angle,col,len){
+  // Directional slash arc
+  vfx.push({x:x,y:y,slash:true,angle:angle||0,len:len||60,col:col,life:1,dec:.08,r:0});
+}
+function spawnBeam(ox,oy,tx,ty,col){
+  vfx.push({x:ox,y:oy,beam:true,tx:tx,ty:ty,col:col,life:1,dec:.06});
 }
 function updProjs(dt){
   for(var i=projs.length-1;i>=0;i--){
@@ -657,7 +680,6 @@ g('btn-continue').addEventListener('click',function(){
 // Multiplayer panel
 g('btn-mp-open').addEventListener('click',function(){
   g('mppanel').classList.remove('hide');
-  initPeer();
 });
 g('btn-mpclose').addEventListener('click',function(){g('mppanel').classList.add('hide');});
 g('mp-myid').addEventListener('click',function(){
@@ -668,13 +690,11 @@ g('mp-myid').addEventListener('click',function(){
 });
 g('btn-mpjoin').addEventListener('click',function(){
   var tid=g('mp-joinid').value.trim();if(!tid)return;
-  if(!peer){initPeer();setTimeout(function(){doJoin(tid);},1200);}else{doJoin(tid);}
-});
-function doJoin(tid){
+  if(!peer){addChat('<span style="color:#ff8080">Join a server first!</span>','announce');return;}
   g('mp-status').textContent='Connecting...';
   var conn=peer.connect(tid,{reliable:true});
   mpSetupConn(conn);
-}
+});
 
 function buildCls(){
   var grid=g('cls-grid'),prev=g('cls-prev'),btnC=g('btn-cls'),sel=null;
@@ -743,49 +763,75 @@ function doSkill(key){
   P.mp-=sk.mp;P.cds[idx]=now;P.aaim=.3;
   var dmg=P.atk*sk.dm;
   addLog(sk.i+' '+sk.n+'!','s');
-  var i,e;
+  var i,e,da,dd;
   if(sk.t==='proj'){
     firePrj(P.x,P.y,mouse.wx,mouse.wy,dmg,sk.col,10,8,'p');
-    spawnVFX(P.x,P.y,sk.col,6,3);
+    spawnBeam(P.x,P.y,mouse.wx,mouse.wy,sk.col);
+    spawnVFX(P.x,P.y,sk.col,8,4);
   } else if(sk.t==='aoe'){
     spawnRing(mouse.wx,mouse.wy,sk.rng,sk.col);
+    spawnVFX(mouse.wx,mouse.wy,sk.col,20,7);
     for(i=0;i<ENS.length;i++){e=ENS[i];if(!e.dead&&dst({x:mouse.wx,y:mouse.wy},e)<sk.rng)hitEnemy(e,dmg);}
     for(i=0;i<BOSSES.length;i++){if(!BOSSES[i].dead&&dst({x:mouse.wx,y:mouse.wy},BOSSES[i])<sk.rng+BOSSES[i].r)hitBoss(BOSSES[i],dmg);}
   } else if(sk.t==='melee'||sk.t==='stun'){
     spawnRing(P.x,P.y,sk.rng,sk.col);
+    spawnSlash(P.x,P.y,P.facing,sk.col,sk.rng);
+    spawnVFX(P.x,P.y,sk.col,12,5);
     for(i=0;i<ENS.length;i++){e=ENS[i];if(!e.dead&&dst(P,e)<sk.rng){hitEnemy(e,dmg);if(sk.t==='stun')e.stun=2;}}
     for(i=0;i<BOSSES.length;i++){if(!BOSSES[i].dead&&dst(P,BOSSES[i])<sk.rng+BOSSES[i].r)hitBoss(BOSSES[i],dmg);}
   } else if(sk.t==='chain'){
     var ts=[];for(i=0;i<ENS.length;i++)if(!ENS[i].dead)ts.push(ENS[i]);
     ts.sort(function(a,b){return dst(P,a)-dst(P,b);});
-    for(i=0;i<Math.min(4,ts.length);i++){hitEnemy(ts[i],dmg*(1-i*.15));spawnVFX(ts[i].x,ts[i].y,sk.col,6,4);}
+    var last={x:P.x,y:P.y};
+    for(i=0;i<Math.min(4,ts.length);i++){
+      hitEnemy(ts[i],dmg*(1-i*.15));
+      spawnBeam(last.x,last.y,ts[i].x,ts[i].y,sk.col);
+      spawnVFX(ts[i].x,ts[i].y,sk.col,8,5);
+      last=ts[i];
+    }
   } else if(sk.t==='drain'){
-    for(i=0;i<ENS.length;i++){e=ENS[i];if(!e.dead&&dst(P,e)<sk.rng){hitEnemy(e,dmg);P.hp=Math.min(P.mhp,P.hp+dmg*.4);}}
+    for(i=0;i<ENS.length;i++){e=ENS[i];if(!e.dead&&dst(P,e)<sk.rng){
+      hitEnemy(e,dmg);P.hp=Math.min(P.mhp,P.hp+dmg*.4);
+      spawnBeam(e.x,e.y,P.x,P.y,'#c040ff');
+    }}
+    spawnRing(P.x,P.y,sk.rng,sk.col);
     addLog('Life drained!','h');
   } else if(sk.t==='dash'){
-    var da=Math.atan2(mouse.wy-P.y,mouse.wx-P.x);
-    var dd=Math.min(sk.rng,dst(P,{x:mouse.wx,y:mouse.wy}));
+    da=Math.atan2(mouse.wy-P.y,mouse.wx-P.x);
+    dd=Math.min(sk.rng,dst(P,{x:mouse.wx,y:mouse.wy}));
+    var ox=P.x,oy=P.y;
     P.x=clamp(P.x+Math.cos(da)*dd,0,WW);P.y=clamp(P.y+Math.sin(da)*dd,0,WH);
-    spawnVFX(P.x,P.y,sk.col,14,5);
+    spawnBeam(ox,oy,P.x,P.y,sk.col);
+    spawnVFX(P.x,P.y,sk.col,18,6);
     for(i=0;i<ENS.length;i++){e=ENS[i];if(!e.dead&&dst(P,e)<60)hitEnemy(e,dmg);}
   } else if(sk.t==='tele'){
-    spawnVFX(P.x,P.y,sk.col,10,4);
+    spawnRing(P.x,P.y,sk.col,60,sk.col);
+    spawnVFX(P.x,P.y,sk.col,14,5);
     P.x=clamp(mouse.wx,0,WW);P.y=clamp(mouse.wy,0,WH);
-    spawnVFX(P.x,P.y,sk.col,10,4);
+    spawnRing(P.x,P.y,60,sk.col);
+    spawnVFX(P.x,P.y,sk.col,14,5);
   } else if(sk.t==='exec'){
     var best=null,bd=99999;
     for(i=0;i<ENS.length;i++){e=ENS[i];if(!e.dead){var dd2=dst(P,e);if(dd2<bd&&dd2<sk.rng){bd=dd2;best=e;}}}
-    if(best){hitEnemy(best,dmg);spawnVFX(best.x,best.y,'#ff0000',22,8);}
+    if(best){
+      spawnBeam(P.x,P.y,best.x,best.y,'#ff2020');
+      hitEnemy(best,dmg);
+      spawnRing(best.x,best.y,80,'#ff0000');
+      spawnVFX(best.x,best.y,'#ff0000',28,9);
+    }
   } else if(sk.t==='summon'){
     var sa=rnd(0,Math.PI*2);
     minions.push({x:P.x+Math.cos(sa)*60,y:P.y+Math.sin(sa)*60,hp:60,mhp:60,atk:P.atk*.5,spd:2.5,life:20,at:0,ico:'💀',col:'#40c040'});
+    spawnRing(P.x,P.y,80,'#40c040');
+    spawnVFX(P.x,P.y,'#40c040',16,5);
     addLog('Skeleton raised!','s');
   } else if(sk.t==='shield'){
-    P.shielded=true;P.stimer=3;addLog('Divine Shield active!','s');spawnVFX(P.x,P.y,sk.col,18,5);
+    P.shielded=true;P.stimer=3;addLog('Divine Shield active!','s');
+    spawnRing(P.x,P.y,50,'#ffffff');spawnVFX(P.x,P.y,'#ffffff',20,6);
   } else if(sk.t==='buff'){
     if(sk.n==='Time Warp'){P.cds=[0,0,0,0];addLog('Time Warp! Cooldowns reset!','s');}
     else if(sk.n==='Storm Surge'){P.btype='storm';P.btimer=8;addLog('Storm Surge! Speed doubled!','s');}
-    spawnVFX(P.x,P.y,sk.col,18,5);
+    spawnRing(P.x,P.y,70,sk.col);spawnVFX(P.x,P.y,sk.col,22,7);
   }
 }
 
@@ -877,8 +923,27 @@ function drawDeco(){
 function drawVFXr(){
   for(var i=0;i<vfx.length;i++){
     var v=vfx[i];ctx.globalAlpha=v.life;
-    if(v.ring){ctx.strokeStyle=v.col;ctx.lineWidth=2;ctx.shadowColor=v.col;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(v.x,v.y,v.r,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
-    else{ctx.fillStyle=v.col;ctx.shadowColor=v.col;ctx.shadowBlur=6;ctx.beginPath();ctx.arc(v.x,v.y,v.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
+    if(v.ring){
+      ctx.strokeStyle=v.col;ctx.lineWidth=3;ctx.shadowColor=v.col;ctx.shadowBlur=14;
+      ctx.beginPath();ctx.arc(v.x,v.y,v.r,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    } else if(v.slash){
+      // Directional arc slash
+      ctx.strokeStyle=v.col;ctx.lineWidth=4;ctx.shadowColor=v.col;ctx.shadowBlur=16;
+      ctx.lineCap='round';
+      ctx.beginPath();
+      ctx.arc(v.x,v.y,v.len,v.angle-0.6,v.angle+0.6);
+      ctx.stroke();ctx.shadowBlur=0;ctx.lineCap='butt';
+    } else if(v.beam){
+      // Laser beam line
+      ctx.strokeStyle=v.col;ctx.lineWidth=4*v.life;ctx.shadowColor=v.col;ctx.shadowBlur=20;
+      ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(v.x,v.y);ctx.lineTo(v.tx,v.ty);ctx.stroke();
+      ctx.lineWidth=1.5*v.life;ctx.strokeStyle='#fff';ctx.beginPath();ctx.moveTo(v.x,v.y);ctx.lineTo(v.tx,v.ty);ctx.stroke();
+      ctx.shadowBlur=0;ctx.lineCap='butt';
+    } else {
+      ctx.fillStyle=v.col;ctx.shadowColor=v.col;ctx.shadowBlur=8;
+      ctx.beginPath();ctx.arc(v.x,v.y,v.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    }
     ctx.globalAlpha=1;
   }
 }
@@ -966,9 +1031,19 @@ function drawP(){
 }
 function drawPrjs(){
   for(var i=0;i<projs.length;i++){
-    var p=projs[i];ctx.globalAlpha=p.life;ctx.shadowColor=p.col;ctx.shadowBlur=10;
+    var p=projs[i];
+    // Trail
+    ctx.globalAlpha=p.life*.4;ctx.strokeStyle=p.col;ctx.lineWidth=p.rad*.8;ctx.lineCap='round';
+    ctx.shadowColor=p.col;ctx.shadowBlur=8;
+    ctx.beginPath();
+    ctx.moveTo(p.x-p.vx*4,p.y-p.vy*4);ctx.lineTo(p.x,p.y);ctx.stroke();
+    ctx.shadowBlur=0;
+    // Core
+    ctx.globalAlpha=p.life;ctx.shadowColor=p.col;ctx.shadowBlur=16;
     ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.rad,0,Math.PI*2);ctx.fill();
-    ctx.shadowBlur=0;ctx.globalAlpha=1;
+    // White hot center
+    ctx.fillStyle='rgba(255,255,255,.7)';ctx.beginPath();ctx.arc(p.x,p.y,p.rad*.4,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.lineCap='butt';
   }
 }
 
@@ -1014,14 +1089,14 @@ function loop(ts){
 
 // ── BOSSES ──
 var BOSS_DEFS=[
-  {zone:0,name:'Thornlord',ico:'🌿',col:'#20a020',hp:4000,atk:35,spd:1.8,bty:500000,hon:50,gold:800,xp:500,r:38},
-  {zone:1,name:'Ashbringer',ico:'🔥',col:'#ff6020',hp:6000,atk:50,spd:2,bty:1200000,hon:80,gold:1500,xp:900,r:40},
-  {zone:2,name:'Glacius Rex',ico:'🧊',col:'#60c0ff',hp:8000,atk:60,spd:1.6,bty:2500000,hon:120,gold:2500,xp:1400,r:42},
-  {zone:3,name:'Swamp Wraith',ico:'🌫️',col:'#60ff60',hp:10000,atk:70,spd:2.2,bty:4000000,hon:160,gold:3500,xp:2000,r:44},
-  {zone:4,name:'Iron Tyrant',ico:'⚙️',col:'#8080ff',hp:14000,atk:90,spd:1.5,bty:7000000,hon:220,gold:5000,xp:3000,r:48},
-  {zone:5,name:'Void Emperor',ico:'🌀',col:'#c000ff',hp:20000,atk:120,spd:2,bty:12000000,hon:350,gold:8000,xp:5000,r:52},
-  {zone:6,name:'Ignaroth',ico:'🐲',col:'#ff2000',hp:30000,atk:160,spd:1.8,bty:22000000,hon:500,gold:15000,xp:9000,r:60},
-  {zone:7,name:'Seraph Prime',ico:'👼',col:'#ffffff',hp:40000,atk:200,spd:2.2,bty:40000000,hon:1000,gold:30000,xp:20000,r:70}
+  {zone:0,name:'Thornlord',ico:'🌿',col:'#20a020',hp:4000,atk:35,spd:0.7,bty:500000,hon:50,gold:800,xp:500,r:38},
+  {zone:1,name:'Ashbringer',ico:'🔥',col:'#ff6020',hp:6000,atk:50,spd:0.8,bty:1200000,hon:80,gold:1500,xp:900,r:40},
+  {zone:2,name:'Glacius Rex',ico:'🧊',col:'#60c0ff',hp:8000,atk:60,spd:0.65,bty:2500000,hon:120,gold:2500,xp:1400,r:42},
+  {zone:3,name:'Swamp Wraith',ico:'🌫️',col:'#60ff60',hp:10000,atk:70,spd:0.9,bty:4000000,hon:160,gold:3500,xp:2000,r:44},
+  {zone:4,name:'Iron Tyrant',ico:'⚙️',col:'#8080ff',hp:14000,atk:90,spd:0.6,bty:7000000,hon:220,gold:5000,xp:3000,r:48},
+  {zone:5,name:'Void Emperor',ico:'🌀',col:'#c000ff',hp:20000,atk:120,spd:0.8,bty:12000000,hon:350,gold:8000,xp:5000,r:52},
+  {zone:6,name:'Ignaroth',ico:'🐲',col:'#ff2000',hp:30000,atk:160,spd:0.75,bty:22000000,hon:500,gold:15000,xp:9000,r:60},
+  {zone:7,name:'Seraph Prime',ico:'👼',col:'#ffffff',hp:40000,atk:200,spd:0.85,bty:40000000,hon:1000,gold:30000,xp:20000,r:70}
 ];
 var BOSSES=[];
 var activeBoss=null;
@@ -1231,18 +1306,76 @@ function updSaveInfo(){
 }
 updSaveInfo();
 
-// ── MULTIPLAYER (PeerJS WebRTC) ──
+// ── SERVERS & MULTIPLAYER ──
+var SERVERS=[
+  {id:'world-1',   name:'World Server 1',   desc:'General PvE — all welcome',    icon:'🌍', color:'#4080ff'},
+  {id:'world-2',   name:'World Server 2',   desc:'General PvE — all welcome',    icon:'🌎', color:'#4080ff'},
+  {id:'world-3',   name:'World Server 3',   desc:'General PvE — all welcome',    icon:'🌏', color:'#4080ff'},
+  {id:'bounty-1',  name:'Bounty Hunt I',    desc:'Bounty hunters only — PvP',    icon:'⚔️', color:'#ff4040'},
+  {id:'bounty-2',  name:'Bounty Hunt II',   desc:'High stakes — top bounties',   icon:'💀', color:'#ff2020'},
+  {id:'elite',     name:'Elite Realm',      desc:'Lv 30+ only — hardcore',       icon:'👑', color:'#ffd700'},
+  {id:'casual',    name:'Casual Realm',     desc:'Relaxed — no bounty loss',     icon:'🌸', color:'#ff80c0'},
+  {id:'hardcore',  name:'Hardcore',         desc:'Permadeath — one life only',   icon:'☠️', color:'#ff0000'}
+];
+
 var peer=null,mpConns=[],mpPeers={};
 var MP_SEND_INTERVAL=50,mpLastSend=0;
+var currentServer=null;
+var takenNames={}; // pid -> name, tracked per session
 
-function initPeer(){
-  if(peer)return;
-  peer=new Peer({debug:0});
+// Build server grid
+(function(){
+  var grid=g('srv-grid');
+  SERVERS.forEach(function(s){
+    var btn=document.createElement('button');
+    btn.style.cssText='background:rgba(5,3,15,.9);border:1px solid '+s.color+';border-radius:8px;padding:10px 12px;cursor:pointer;text-align:left;color:#fff;font-family:Georgia,serif;transition:all .2s';
+    btn.innerHTML='<div style="font-size:1.1rem">'+s.icon+'</div><div style="font-size:.78rem;color:'+s.color+';font-weight:bold;margin:2px 0">'+s.name+'</div><div style="font-size:.65rem;color:rgba(255,255,255,.45)">'+s.desc+'</div>';
+    btn.addEventListener('mouseenter',function(){btn.style.boxShadow='0 0 12px '+s.color;});
+    btn.addEventListener('mouseleave',function(){btn.style.boxShadow='';});
+    btn.addEventListener('click',function(){joinServer(s);});
+    grid.appendChild(btn);
+  });
+})();
+
+function joinServer(s){
+  currentServer=s;
+  g('mp-srv-sel').style.display='none';
+  g('mp-connected').style.display='flex';
+  g('mp-srv-name').textContent=s.icon+' '+s.name;
+  // Use server id as PeerJS prefix so players on same server share a namespace
+  initPeer(s.id);
+  addChat('<span style="color:'+s.color+'">Joined '+s.name+'</span> — share your ID to connect with others!','announce');
+}
+
+g('btn-mpleave').addEventListener('click',function(){
+  currentServer=null;
+  g('mp-connected').style.display='none';
+  g('mp-srv-sel').style.display='';
+  if(peer){peer.destroy();peer=null;}
+  mpConns=[];mpPeers={};takenNames={};
+});
+
+g('btn-custom-srv').addEventListener('click',function(){
+  var sid=g('mp-custom-srv').value.trim();if(!sid)return;
+  joinServer({id:sid,name:sid,desc:'Custom server',icon:'🔧',color:'#80c0ff'});
+});
+
+function initPeer(serverPrefix){
+  if(peer)peer.destroy();
+  // Embed server prefix in peer ID so players on different servers can't accidentally connect
+  var pid=(serverPrefix||'ad')+'-'+Math.random().toString(36).slice(2,8);
+  peer=new Peer(pid,{debug:0});
   peer.on('open',function(id){
     g('mp-myid').textContent=id;
-    g('mp-status').textContent='Ready — share your ID';
+    g('mp-status').textContent='Ready — share your ID with friends on this server';
   });
-  peer.on('connection',function(conn){mpSetupConn(conn);});
+  peer.on('connection',function(conn){
+    // Validate same server
+    if(currentServer&&conn.peer.indexOf(currentServer.id+'-')!==0){
+      conn.close();return;
+    }
+    mpSetupConn(conn);
+  });
   peer.on('error',function(e){g('mp-status').textContent='Error: '+e.type;});
 }
 
@@ -1250,21 +1383,41 @@ function mpSetupConn(conn){
   conn.on('open',function(){
     mpConns.push(conn);
     g('mp-status').textContent='Connected!';
-    g('mp-peers').textContent='Players online: '+(mpConns.length+1);
-    addLog(conn.peer.slice(0,6)+'... joined!','o');
+    g('mp-peers').textContent='Players in session: '+(mpConns.length+1);
+    addLog(conn.peer.slice(conn.peer.indexOf('-')+1)+'... joined!','o');
+    // Send our name for uniqueness check
+    conn.send({type:'namecheck',name:P?P.name:'',pid:peer.id});
   });
   conn.on('data',function(data){mpHandleData(conn.peer,data);});
   conn.on('close',function(){
     mpConns=mpConns.filter(function(c){return c!==conn;});
     delete mpPeers[conn.peer];
-    g('mp-peers').textContent='Players online: '+(mpConns.length+1);
+    delete takenNames[conn.peer];
+    g('mp-peers').textContent='Players in session: '+(mpConns.length+1);
     addLog('A player disconnected.','d');
     updPeerTags();
   });
 }
 
 function mpHandleData(pid,data){
-  if(data.type==='state'){
+  if(data.type==='namecheck'){
+    takenNames[pid]=data.name;
+    // If name conflicts with ours, notify
+    if(P&&data.name===P.name){
+      // Tell them their name is taken
+      for(var i=0;i<mpConns.length;i++){
+        if(mpConns[i].peer===pid){
+          try{mpConns[i].send({type:'nametaken',takenBy:peer.id});}catch(e){}
+        }
+      }
+    }
+  } else if(data.type==='nametaken'){
+    // Our name is taken — append a suffix
+    if(P){
+      P.name=P.name+'_'+Math.floor(Math.random()*99+1);
+      addChat('<span style="color:#ff8080">Name conflict! Renamed to: <b>'+P.name+'</b></span>','announce');
+    }
+  } else if(data.type==='state'){
     mpPeers[pid]=data;
     updPeerTags();
   } else if(data.type==='chat'){
