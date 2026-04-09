@@ -1570,50 +1570,7 @@ g('chatinput').addEventListener('keydown',function(e){
   if(e.key==='Enter'){sendChat(this.value);this.value='';this.blur();e.stopPropagation();}
   e.stopPropagation(); // prevent game keys while typing
 });
-  
-// ── SAVE SYSTEM ──
-const SAVE_KEY = "ArcaneDominion_Saves";
 
-function saveGame(slot = 1) {
-    // 1. Get existing saves or start an empty object
-    let allSaves = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}");
-
-    // 2. Package the current player data
-    allSaves[slot] = {
-        player: game.player,
-        timestamp: Date.now(),
-        zone: zoneAt(game.player.x, game.player.y).name
-    };
-
-    // 3. Put it back in storage
-    localStorage.setItem(SAVE_KEY, JSON.stringify(allSaves));
-    
-    // UI Feedback
-    g('savetoast').classList.add('on');
-    setTimeout(() => g('savetoast').classList.remove('on'), 2000);
-}
-
-function loadGame(slot = 1) {
-    let allSaves = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}");
-    if (allSaves[slot]) {
-        initGame(allSaves[slot].player);
-    } else {
-        alert("No save found in this slot!");
-    }
-}
-
-// ── CONNECT TO YOUR BUTTONS ──
-g('btn-save-now').onclick = () => saveGame(1); // Currently defaults to Slot 1
-
-g('btn-continue').onclick = () => {
-    let allSaves = JSON.parse(localStorage.getItem(SAVE_KEY) || "{}");
-    if (allSaves[1]) {
-        loadGame(1);
-    } else {
-        g('save-info').textContent = "No saved data found.";
-    }
-};
-  
 </script>
 </body>
 </html>
