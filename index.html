@@ -86,7 +86,7 @@ canvas{display:block}
 .skcd.on{opacity:1}
 
 /* COMBAT LOG */
-#clog{position:fixed;bottom:82px;left:13px;width:260px;pointer-events:none;z-index:10;display:flex;flex-direction:column;gap:3px}
+#clog{position:fixed;bottom:82px;right:14px;width:240px;pointer-events:none;z-index:10;display:flex;flex-direction:column;gap:3px}
 .le{font-size:.7rem;padding:3px 7px;border-radius:3px;background:rgba(0,0,0,.6);border-left:3px solid #ffd700;animation:lfade 4s forwards;color:rgba(255,255,255,.82)}
 .le.d{border-left-color:#e84040}.le.h{border-left-color:#40c060}.le.s{border-left-color:#a040ff}.le.b{border-left-color:#ff4040;color:#ff8080}.le.o{border-left-color:#ffd700;color:#ffd700}
 @keyframes lfade{0%{opacity:0;transform:translateX(-8px)}10%{opacity:1;transform:none}70%{opacity:1}100%{opacity:0}}
@@ -155,7 +155,26 @@ canvas{display:block}
 .ptag{background:rgba(5,3,15,.85);border:1px solid rgba(200,160,60,.3);border-radius:20px;padding:3px 10px;font-size:.68rem;color:rgba(255,255,255,.7)}
 
 /* CHAT */
-#chat{position:fixed;bottom:82px;right:14px;width:280px;z-index:12;display:flex;flex-direction:column;gap:4px}
+#chat{position:fixed;bottom:82px;left:14px;width:260px;z-index:12;display:flex;flex-direction:column;gap:4px}
+
+/* MOBILE */
+#s-device{background:radial-gradient(ellipse at 50% 40%,#1a0830 0%,#000 70%)}
+#s-device h2{color:#ffd700;font-size:1.6rem;margin-bottom:12px;text-align:center}
+#s-device p{color:rgba(255,255,255,.6);font-size:.9rem;text-align:center;margin-bottom:20px;max-width:340px}
+#orient-screen{display:none;position:fixed;inset:0;background:#000;z-index:100;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#orient-screen.show{display:flex}
+#orient-icon{font-size:4rem;animation:rotateHint 2s ease-in-out infinite alternate}
+@keyframes rotateHint{from{transform:rotate(0deg)}to{transform:rotate(90deg)}}
+#orient-screen p{color:rgba(255,255,255,.7);font-size:1rem;text-align:center;padding:0 30px}
+
+/* MOBILE JOYSTICK */
+#joystick-zone{position:fixed;bottom:20px;left:20px;width:130px;height:130px;z-index:20;display:none;touch-action:none}
+#joystick-base{width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);position:absolute}
+#joystick-knob{width:52px;height:52px;border-radius:50%;background:rgba(255,215,0,.5);border:2px solid rgba(255,215,0,.8);position:absolute;top:39px;left:39px;box-shadow:0 0 12px rgba(255,215,0,.4)}
+#mobile-skills{position:fixed;bottom:20px;right:14px;display:none;flex-direction:column;gap:8px;z-index:20}
+.mob-sk{width:58px;height:58px;border-radius:50%;background:rgba(5,3,15,.9);border:2px solid rgba(200,160,60,.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none}
+.mob-sk:active{background:rgba(255,215,0,.2);border-color:#ffd700}
+#mobile-aim{position:fixed;top:0;left:0;right:0;bottom:0;z-index:8;display:none;touch-action:none}
 #chatlog{height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:3px;padding:4px 0}
 #chatlog::-webkit-scrollbar{width:3px}
 #chatlog::-webkit-scrollbar-thumb{background:rgba(255,215,0,.3);border-radius:2px}
@@ -172,8 +191,24 @@ canvas{display:block}
 </head>
 <body>
 
+<!-- ORIENTATION WARNING (mobile only) -->
+<div id="orient-screen">
+  <div id="orient-icon">📱</div>
+  <p>Please rotate your device to <b style="color:#ffd700">landscape</b> mode to play.</p>
+</div>
+
+<!-- DEVICE SELECT -->
+<div id="s-device" class="scr on">
+  <h2>ARCANE DOMINION</h2>
+  <p>How are you playing?</p>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+    <button class="btn" id="btn-pc" style="font-size:1.1rem;padding:18px 36px">🖥️ PC / Desktop</button>
+    <button class="btn" id="btn-mobile" style="font-size:1.1rem;padding:18px 36px;background:linear-gradient(135deg,#204060,#4080a0);color:#fff">📱 Mobile</button>
+  </div>
+</div>
+
 <!-- INTRO -->
-<div id="s-intro" class="scr on">
+<div id="s-intro" class="scr">
   <h1>ARCANE DOMINION</h1>
   <p>A world torn between magic and steel</p>
   <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
@@ -251,6 +286,19 @@ canvas{display:block}
   </div>
   <div id="bmile" class="hide"><div class="bmi" id="bmiinner"></div></div>
   <div id="hint">WASD Move &nbsp;|&nbsp; Q/W/E/R Skills &nbsp;|&nbsp; ESC Pause</div>
+
+  <!-- MOBILE CONTROLS -->
+  <div id="mobile-aim"></div>
+  <div id="joystick-zone">
+    <div id="joystick-base"></div>
+    <div id="joystick-knob"></div>
+  </div>
+  <div id="mobile-skills">
+    <div class="mob-sk" id="mob-sk0" ontouchstart="mobSkill(0)"></div>
+    <div class="mob-sk" id="mob-sk1" ontouchstart="mobSkill(1)"></div>
+    <div class="mob-sk" id="mob-sk2" ontouchstart="mobSkill(2)"></div>
+    <div class="mob-sk" id="mob-sk3" ontouchstart="mobSkill(3)"></div>
+  </div>
 
   <!-- DUNGEON ENTRY BUTTONS (shown only in-game) -->
   <div id="dungeon-btn" style="position:fixed;bottom:82px;right:14px;display:flex;flex-direction:column;gap:5px;z-index:11;pointer-events:all">
@@ -356,11 +404,21 @@ function floatNum(x,y,txt,col,sz){
   document.body.appendChild(e);e.addEventListener('animationend',function(){e.remove()});
 }
 function showScr(id){
-  ['s-intro','s-class','s-name','s-game'].forEach(function(s){
-    var el=g(s);el.classList.remove('on');el.style.display='';
+  ['s-intro','s-class','s-name','s-game','s-device'].forEach(function(s){
+    var el=g(s);if(el){el.classList.remove('on');el.style.display='';}
   });
   var t=g(id);
-  if(id==='s-game'){t.style.display='block'}else{t.classList.add('on')}
+  if(id==='s-game'){t.style.display='block';}else{t.classList.add('on');}
+  // Hide game-only UI when not in game
+  var inGame=(id==='s-game');
+  ['hud','skillbar','clog','chat','dungeon-btn','bossbar','plist','hint'].forEach(function(eid){
+    var el=g(eid);if(el)el.style.visibility=inGame?'':'hidden';
+  });
+  if(!inGame){
+    // Also hide bossbar and dungeon overlay
+    var bb=g('bossbar');if(bb)bb.classList.remove('on');
+    var dov=g('dungeon-overlay');if(dov)dov.style.display='none';
+  }
 }
 
 // ── CLASSES ──
@@ -1985,6 +2043,138 @@ function drawDungeonEnemies(){
     ctx.textBaseline='alphabetic';ctx.textAlign='left';
   }
 }
+
+// ── DEVICE & MOBILE ──
+var isMobile=false;
+var joystickActive=false,joyStartX=0,joyStartY=0,joyDX=0,joyDY=0;
+
+// Device select buttons
+safeOn('btn-pc','click',function(){
+  isMobile=false;
+  showScr('s-intro');
+});
+safeOn('btn-mobile','click',function(){
+  isMobile=true;
+  checkOrientation();
+  showScr('s-intro');
+});
+
+// Auto-detect mobile
+if(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)){
+  isMobile=true;
+}
+
+// Orientation check
+function checkOrientation(){
+  if(!isMobile)return;
+  var os=g('orient-screen');
+  if(window.innerWidth<window.innerHeight){
+    os.classList.add('show');
+  } else {
+    os.classList.remove('show');
+  }
+}
+window.addEventListener('resize',checkOrientation);
+window.addEventListener('orientationchange',function(){setTimeout(checkOrientation,300);});
+
+// Show/hide mobile controls when entering game
+var _origShowScr=showScr;
+showScr=function(id){
+  _origShowScr(id);
+  var inGame=(id==='s-game');
+  g('joystick-zone').style.display=(inGame&&isMobile)?'block':'none';
+  g('mobile-skills').style.display=(inGame&&isMobile)?'flex':'none';
+  g('mobile-aim').style.display=(inGame&&isMobile)?'block':'none';
+  g('hint').style.display=(inGame&&!isMobile)?'':'none';
+  if(inGame&&isMobile)checkOrientation();
+};
+
+// Build mobile skill buttons
+function buildMobSkBar(cls){
+  for(var i=0;i<4;i++){
+    var el=g('mob-sk'+i);
+    if(el)el.textContent=cls.sk[i].i;
+  }
+}
+function mobSkill(idx){
+  if(!P||P.dead)return;
+  // Aim at center of screen for mobile skills
+  mouse.wx=P.x;mouse.wy=P.y-100;
+  doSkill(['q','w','e','r'][idx]);
+}
+
+// Joystick touch
+var joyEl=g('joystick-zone');
+var joyKnob=g('joystick-knob');
+if(joyEl){
+  joyEl.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    var t=e.touches[0];
+    var rect=joyEl.getBoundingClientRect();
+    joyStartX=rect.left+65;joyStartY=rect.top+65;
+    joystickActive=true;
+  },{passive:false});
+  joyEl.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(!joystickActive)return;
+    var t=e.touches[0];
+    var dx=t.clientX-joyStartX,dy=t.clientY-joyStartY;
+    var dist=Math.hypot(dx,dy);
+    var maxR=50;
+    if(dist>maxR){dx=dx/dist*maxR;dy=dy/dist*maxR;}
+    joyDX=dx/maxR;joyDY=dy/maxR;
+    if(joyKnob){joyKnob.style.left=(39+dx)+'px';joyKnob.style.top=(39+dy)+'px';}
+  },{passive:false});
+  joyEl.addEventListener('touchend',function(e){
+    e.preventDefault();
+    joystickActive=false;joyDX=0;joyDY=0;
+    if(joyKnob){joyKnob.style.left='39px';joyKnob.style.top='39px';}
+  },{passive:false});
+}
+
+// Touch aim (right side of screen)
+var aimEl=g('mobile-aim');
+if(aimEl){
+  aimEl.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(!P)return;
+    var t=e.touches[0];
+    mouse.x=t.clientX;mouse.y=t.clientY;
+    mouse.wx=P.cx+(t.clientX-cv.width/2)/P.zoom;
+    mouse.wy=P.cy+(t.clientY-cv.height/2)/P.zoom;
+  },{passive:false});
+  aimEl.addEventListener('touchstart',function(e){
+    // Tap to fire Q skill
+    if(!P||P.dead)return;
+    var t=e.touches[0];
+    mouse.wx=P.cx+(t.clientX-cv.width/2)/P.zoom;
+    mouse.wy=P.cy+(t.clientY-cv.height/2)/P.zoom;
+    doSkill('q');
+  },{passive:false});
+}
+
+// Inject joystick into player movement
+var _origUpdP=updP;
+updP=function(dt){
+  if(isMobile&&joystickActive&&joyDX!==0||joyDY!==0){
+    // Override keys with joystick
+    keys['w']=joyDY<-0.2;
+    keys['s']=joyDY>0.2;
+    keys['a']=joyDX<-0.2;
+    keys['d']=joyDX>0.2;
+  }
+  _origUpdP(dt);
+};
+
+// Patch startGame to also build mobile skill bar
+var _origStartGame=startGame;
+startGame=function(){
+  _origStartGame();
+  if(isMobile&&window._cls)buildMobSkBar(window._cls);
+};
+
+// Initial orientation check
+checkOrientation();
 
 </script>
 </body>
