@@ -562,7 +562,7 @@ function typeIt(el,txt,spd){
   el.textContent='';var i=0;
   var iv=setInterval(function(){el.textContent+=txt[i++];if(i>=txt.length)clearInterval(iv);},spd||30);
 }
-g('snxt').addEventListener('click',nextLine);
+// snxt listener registered in screen flow section below
 
 // ── COMBAT ──
 var projs=[],vfx=[],minions=[],logQ=[];
@@ -702,30 +702,28 @@ cv.addEventListener('mousemove',function(e){
 });
 
 // ── SCREEN FLOW ──
-g('btn-start').addEventListener('click',function(){showScr('s-class');buildCls();});
-g('btn-name').addEventListener('click',startGame);
-g('pname').addEventListener('keydown',function(e){if(e.key==='Enter')startGame();});
-g('btn-res').addEventListener('click',function(){paused=false;g('pmenu').classList.add('hide');});
-g('btn-quit').addEventListener('click',function(){paused=false;running=false;g('pmenu').classList.add('hide');showScr('s-intro');updSaveInfo();});
-g('btn-lu').addEventListener('click',function(){g('lvlup').classList.add('hide');});
-
-// Save button in pause menu
-g('btn-save-now').addEventListener('click',function(){saveGame();});
+function safeOn(id,ev,fn){var el=g(id);if(el)el.addEventListener(ev,fn);}
+safeOn('btn-start','click',function(){showScr('s-class');buildCls();});
+safeOn('btn-name','click',startGame);
+safeOn('pname','keydown',function(e){if(e.key==='Enter')startGame();});
+safeOn('btn-res','click',function(){paused=false;g('pmenu').classList.add('hide');});
+safeOn('btn-quit','click',function(){paused=false;running=false;g('pmenu').classList.add('hide');showScr('s-intro');updSaveInfo();});
+safeOn('btn-lu','click',function(){g('lvlup').classList.add('hide');});
+safeOn('btn-save-now','click',function(){saveGame();});
+safeOn('snxt','click',nextLine);
 
 // Continue button removed — save slots handled by loadSlot() called from save-info buttons
 
 // Multiplayer panel
-g('btn-mp-open').addEventListener('click',function(){
-  g('mppanel').classList.remove('hide');
-});
-g('btn-mpclose').addEventListener('click',function(){g('mppanel').classList.add('hide');});
-g('mp-myid').addEventListener('click',function(){
+safeOn('btn-mp-open','click',function(){g('mppanel').classList.remove('hide');});
+safeOn('btn-mpclose','click',function(){g('mppanel').classList.add('hide');});
+safeOn('mp-myid','click',function(){
   var id=g('mp-myid').textContent;
   if(navigator.clipboard)navigator.clipboard.writeText(id);
   g('mp-myid').textContent='Copied!';
   setTimeout(function(){g('mp-myid').textContent=id;},1200);
 });
-g('btn-mpjoin').addEventListener('click',function(){
+safeOn('btn-mpjoin','click',function(){
   var tid=g('mp-joinid').value.trim();if(!tid)return;
   if(!peer){addChat('<span style="color:#ff8080">Join a server first!</span>','announce');return;}
   g('mp-status').textContent='Connecting...';
@@ -951,4 +949,1043 @@ function drawBG(){
     for(var gx=z.x;gx<z.x+z.w;gx+=80){ctx.beginPath();ctx.moveTo(gx,z.y);ctx.lineTo(gx,z.y+z.h);ctx.stroke();}
     for(var gy=z.y;gy<z.y+z.h;gy+=80){ctx.beginPath();ctx.moveTo(z.x,gy);ctx.lineTo(z.x+z.w,gy);ctx.stroke();}
     ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=2;ctx.strokeRect(z.x,z.y,z.w,z.h);
-    ctx.fillStyle='rgba(255,255,255,.09)
+    ctx.fillStyle='rgba(255,255,255,.09)';ctx.font='bold 24px Georgia,serif';ctx.textAlign='center';
+    ctx.fillText(z.name,z.x+z.w/2,z.y+z.h/2);ctx.textAlign='left';
+  }
+}
+function drawDeco(){
+  for(var i=0;i<DECO.length;i++){
+    var d=DECO[i];ctx.fillStyle=d.col;
+    if(d.tp==='tree'){ctx.beginPath();ctx.arc(d.x,d.y,d.sz,0,Math.PI*2);ctx.fill();}
+    else if(d.tp==='rock'){ctx.beginPath();ctx.ellipse(d.x,d.y,d.sz,d.sz*.6,.3,0,Math.PI*2);ctx.fill();}
+    else{ctx.fillRect(d.x-d.sz/2,d.y-d.sz,d.sz,d.sz*1.5);}
+  }
+}
+function drawVFXr(){
+  for(var i=0;i<vfx.length;i++){
+    var v=vfx[i];ctx.globalAlpha=v.life;
+    if(v.ring){
+      ctx.strokeStyle=v.col;ctx.lineWidth=3;ctx.shadowColor=v.col;ctx.shadowBlur=14;
+      ctx.beginPath();ctx.arc(v.x,v.y,v.r,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    } else if(v.slash){
+      // Directional arc slash
+      ctx.strokeStyle=v.col;ctx.lineWidth=4;ctx.shadowColor=v.col;ctx.shadowBlur=16;
+      ctx.lineCap='round';
+      ctx.beginPath();
+      ctx.arc(v.x,v.y,v.len,v.angle-0.6,v.angle+0.6);
+      ctx.stroke();ctx.shadowBlur=0;ctx.lineCap='butt';
+    } else if(v.beam){
+      // Laser beam line
+      ctx.strokeStyle=v.col;ctx.lineWidth=4*v.life;ctx.shadowColor=v.col;ctx.shadowBlur=20;
+      ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(v.x,v.y);ctx.lineTo(v.tx,v.ty);ctx.stroke();
+      ctx.lineWidth=1.5*v.life;ctx.strokeStyle='#fff';ctx.beginPath();ctx.moveTo(v.x,v.y);ctx.lineTo(v.tx,v.ty);ctx.stroke();
+      ctx.shadowBlur=0;ctx.lineCap='butt';
+    } else {
+      ctx.fillStyle=v.col;ctx.shadowColor=v.col;ctx.shadowBlur=8;
+      ctx.beginPath();ctx.arc(v.x,v.y,v.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    }
+    ctx.globalAlpha=1;
+  }
+}
+function drawEns(){
+  for(var i=0;i<ENS.length;i++){
+    var e=ENS[i];if(e.dead)continue;
+    ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(e.x,e.y+17,17,6,0,0,Math.PI*2);ctx.fill();
+    if(e.aggro){ctx.shadowColor=e.col;ctx.shadowBlur=16;}
+    ctx.fillStyle=e.col;ctx.beginPath();ctx.arc(e.x,e.y,20,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(e.ico,e.x,e.y);
+    var bw=40;ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(e.x-bw/2,e.y-31,bw,5);
+    ctx.fillStyle=e.hp/e.mhp>.5?'#40c040':e.hp/e.mhp>.25?'#c0c040':'#c04040';
+    ctx.fillRect(e.x-bw/2,e.y-31,bw*(e.hp/e.mhp),5);
+    ctx.fillStyle='rgba(255,255,255,.6)';ctx.font='9px Georgia,serif';ctx.fillText(e.name,e.x,e.y-37);
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  }
+}
+function drawMins(){
+  for(var i=0;i<minions.length;i++){
+    var m=minions[i];ctx.fillStyle=m.col;ctx.beginPath();ctx.arc(m.x,m.y,13,0,Math.PI*2);ctx.fill();
+    ctx.font='13px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(m.ico,m.x,m.y);
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  }
+}
+function drawTrail(){
+  if(!P)return;
+  for(var i=0;i<P.trail.length;i++){
+    var t=P.trail[i];ctx.globalAlpha=t.l*.26;ctx.fillStyle=P.col;
+    ctx.beginPath();ctx.arc(t.x,t.y,9,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+}
+function drawP(){
+  var p=P,b=Math.sin(Date.now()*.005)*2;
+  ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(p.x,p.y+19,19,7,0,0,Math.PI*2);ctx.fill();
+  if(p.shielded){ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=3;ctx.shadowColor='#fff';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(p.x,p.y,31,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
+  ctx.shadowColor=p.col;ctx.shadowBlur=20+p.aaim*18;
+  ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y+b,21,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.font='21px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.ico,p.x,p.y+b);
+  ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+Math.cos(p.facing)*27,p.y+Math.sin(p.facing)*27);ctx.stroke();
+
+  // ── TITLES ABOVE HEAD ──
+  var ht=htitle(p.honor);
+  var br=brank(p.bounty);
+  var yBase=p.y-30;
+
+  // Honor title (gold, top)
+  if(ht.s>0){
+    ctx.font='bold 10px Georgia,serif';
+    ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    var htxt='✦ '+ht.t+' ✦';
+    ctx.shadowColor='#ffd700';ctx.shadowBlur=8;
+    ctx.fillStyle='#ffd700';
+    ctx.fillText(htxt,p.x,yBase-22);
+    ctx.shadowBlur=0;
+  }
+
+  // Bounty rank (red, below honor title)
+  if(p.bounty>=10000){
+    ctx.font='bold 10px Georgia,serif';
+    ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.shadowColor=br.c;ctx.shadowBlur=8;
+    ctx.fillStyle=br.c;
+    ctx.fillText('⚔ '+br.n,p.x,yBase-10);
+    ctx.shadowBlur=0;
+  }
+
+  // Player name
+  ctx.font='bold 11px Georgia,serif';
+  ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  ctx.fillStyle='rgba(255,255,255,.85)';
+  ctx.fillText(p.name,p.x,yBase);
+
+  // Stars row
+  if(ht.s>0){
+    ctx.font='9px serif';
+    ctx.fillStyle='#ffd700';
+    ctx.fillText('★'.repeat(ht.s)+'☆'.repeat(5-ht.s),p.x,yBase+10);
+  }
+
+  ctx.textBaseline='alphabetic';ctx.textAlign='left';
+}
+function drawPrjs(){
+  for(var i=0;i<projs.length;i++){
+    var p=projs[i];
+    // Trail
+    ctx.globalAlpha=p.life*.4;ctx.strokeStyle=p.col;ctx.lineWidth=p.rad*.8;ctx.lineCap='round';
+    ctx.shadowColor=p.col;ctx.shadowBlur=8;
+    ctx.beginPath();
+    ctx.moveTo(p.x-p.vx*4,p.y-p.vy*4);ctx.lineTo(p.x,p.y);ctx.stroke();
+    ctx.shadowBlur=0;
+    // Core
+    ctx.globalAlpha=p.life;ctx.shadowColor=p.col;ctx.shadowBlur=16;
+    ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.rad,0,Math.PI*2);ctx.fill();
+    // White hot center
+    ctx.fillStyle='rgba(255,255,255,.7)';ctx.beginPath();ctx.arc(p.x,p.y,p.rad*.4,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.lineCap='butt';
+  }
+}
+
+// ── HUD UPDATE ──
+function updHUD(){
+  if(!P)return;
+  g('hname').textContent=P.name;g('hcls').textContent=P.cname;
+  g('bhp').style.width=(P.hp/P.mhp*100)+'%';g('bhptxt').textContent=Math.ceil(P.hp)+'/'+P.mhp;
+  g('bmp').style.width=(P.mp/P.mmp*100)+'%';g('bmptxt').textContent=Math.ceil(P.mp)+'/'+P.mmp;
+  g('bxp').style.width=(P.xp/P.xpn*100)+'%';g('bxptxt').textContent=Math.floor(P.xp)+'/'+P.xpn;
+  g('hlvl').textContent=P.lv;g('hgold').textContent=P.gold;
+  g('hloc').textContent=zoneAt(P.x,P.y).name;
+}
+function updSkBar(now){
+  if(!P)return;
+  for(var i=0;i<4;i++){
+    var sk=P.cls.sk[i],el=(now-(P.cds[i]||0))/1000,rem=sk.cd-el;
+    var cd=g('scd'+i),sl=g('sk'+i);
+    if(rem>0){cd.textContent=rem.toFixed(1);cd.classList.add('on');sl.classList.add('cd');}
+    else{cd.textContent='';cd.classList.remove('on');sl.classList.remove('cd');}
+  }
+}
+function updMinimap(){
+  if(!P)return;
+  var mc=g('minimap'),mx=mc.getContext('2d'),MW=mc.width,MH=mc.height;
+  var sx=MW/WW,sy=MH/WH;
+  mx.clearRect(0,0,MW,MH);
+  for(var i=0;i<ZONES.length;i++){var z=ZONES[i];mx.fillStyle=z.col;mx.fillRect(z.x*sx,z.y*sy,z.w*sx,z.h*sy);}
+  for(var i=0;i<ENS.length;i++){var e=ENS[i];if(e.dead)continue;mx.fillStyle=e.col;mx.fillRect(e.x*sx-1,e.y*sy-1,2,2);}
+  for(var i=0;i<BOSSES.length;i++){var b=BOSSES[i];if(b.dead)continue;mx.fillStyle=b.col;mx.beginPath();mx.arc(b.x*sx,b.y*sy,3,0,Math.PI*2);mx.fill();}
+  mx.fillStyle='#ffd700';mx.beginPath();mx.arc(P.x*sx,P.y*sy,3,0,Math.PI*2);mx.fill();
+}
+
+// ── LOOP ──
+function loop(ts){
+  if(!running)return;
+  if(lt===0)lt=ts;
+  var dt=Math.min((ts-lt)/1000,.05);lt=ts;
+  if(!paused){updP(dt);updEnemies(dt);updBosses(dt);updDungeon(dt);updProjs(dt);updVFX();mpSendState();}
+  render();updHUD();updSkBar(ts);updMinimap();
+  requestAnimationFrame(loop);
+}
+
+// ── BOSSES ──
+var BOSS_DEFS=[
+  {zone:0,name:'Thornlord',ico:'🌿',col:'#20a020',hp:4000,atk:35,spd:0.7,bty:5000,hon:50,gold:800,xp:500,r:38},
+  {zone:1,name:'Ashbringer',ico:'🔥',col:'#ff6020',hp:6000,atk:50,spd:0.8,bty:12000,hon:80,gold:1500,xp:900,r:40},
+  {zone:2,name:'Glacius Rex',ico:'🧊',col:'#60c0ff',hp:8000,atk:60,spd:0.65,bty:25000,hon:120,gold:2500,xp:1400,r:42},
+  {zone:3,name:'Swamp Wraith',ico:'🌫️',col:'#60ff60',hp:10000,atk:70,spd:0.9,bty:50000,hon:160,gold:3500,xp:2000,r:44},
+  {zone:4,name:'Iron Tyrant',ico:'⚙️',col:'#8080ff',hp:14000,atk:90,spd:0.6,bty:120000,hon:220,gold:5000,xp:3000,r:48},
+  {zone:5,name:'Void Emperor',ico:'🌀',col:'#c000ff',hp:20000,atk:120,spd:0.8,bty:350000,hon:350,gold:8000,xp:5000,r:52},
+  {zone:6,name:'Ignaroth',ico:'🐲',col:'#ff2000',hp:30000,atk:160,spd:0.75,bty:1500000,hon:500,gold:15000,xp:9000,r:60},
+  {zone:7,name:'Seraph Prime',ico:'👼',col:'#ffffff',hp:40000,atk:200,spd:0.85,bty:40000000,hon:1000,gold:30000,xp:20000,r:70,grantMax:true}
+];
+var BOSSES=[];
+var activeBoss=null;
+
+function mkBosses(){
+  BOSSES=[];
+  for(var i=0;i<BOSS_DEFS.length;i++){
+    var bd=BOSS_DEFS[i],z=ZONES[bd.zone];
+    var bx=z.x+rnd(80,z.w-80),by=z.y+rnd(80,z.h-80);
+    BOSSES.push({
+      def:bd,name:bd.name,ico:bd.ico,col:bd.col,
+      x:bx,y:by,sx:bx,sy:by,
+      hp:bd.hp,mhp:bd.hp,atk:bd.atk,spd:bd.spd,
+      bty:bd.bty,hon:bd.hon,gold:bd.gold,xp:bd.xp,r:bd.r,
+      dead:false,rt:0,aggro:false,atimer:0,stun:0,
+      phase:1,ptimer:0,enraged:false,
+      ar:350,isBoss:true,zone:bd.zone
+    });
+    // Announce initial spawn after a short delay
+    (function(boss){
+      setTimeout(function(){bossAnnounce('spawn',boss);},2000+i*400);
+    })(BOSSES[BOSSES.length-1]);
+  }
+}
+
+function updBosses(dt){
+  if(!P)return;
+  var newActive=null;
+  for(var i=0;i<BOSSES.length;i++){
+    var b=BOSSES[i];
+    if(b.dead){
+      b.rt-=dt;
+      if(b.rt<=0){
+        var z=ZONES[b.def.zone];
+        b.x=z.x+rnd(80,z.w-80);b.y=z.y+rnd(80,z.h-80);
+        b.sx=b.x;b.sy=b.y;
+        b.dead=false;b.hp=b.mhp;b.enraged=false;b.phase=1;
+        bossAnnounce('spawn',b);
+      }
+      continue;
+    }
+    var d=dst(b,P);
+    if(d<b.ar)b.aggro=true;
+    else if(d>b.ar*2.5)b.aggro=false;
+    if(b.aggro&&!P.dead){
+      newActive=b;
+      // Enrage at 30% HP
+      if(!b.enraged&&b.hp/b.mhp<.3){b.enraged=true;b.spd*=1.6;addLog('⚠ '+b.name+' ENRAGED!','d');}
+      var spd=b.spd*(b.enraged?1:1);
+      var a=ang(b,P);b.x+=Math.cos(a)*spd;b.y+=Math.sin(a)*spd;
+      b.atimer-=dt;
+      if(b.atimer<=0){
+        b.atimer=b.enraged?.8:1.4;
+        // Phase attacks
+        if(b.phase===1||b.hp/b.mhp>.6){
+          // Single projectile
+          firePrj(b.x,b.y,P.x,P.y,b.atk,b.col,8,8,'e');
+        } else if(b.hp/b.mhp>.3){
+          // Triple spread
+          for(var s=-1;s<=1;s++){
+            var ba=ang(b,P)+s*.3;
+            projs.push({x:b.x,y:b.y,vx:Math.cos(ba)*8,vy:Math.sin(ba)*8,dmg:b.atk*.8,col:b.col,rad:7,own:'e',life:1,dec:.006});
+          }
+        } else {
+          // Enraged: 5-way burst
+          for(var s=0;s<5;s++){
+            var ba=ang(b,P)+(s-2)*.25;
+            projs.push({x:b.x,y:b.y,vx:Math.cos(ba)*9,vy:Math.sin(ba)*9,dmg:b.atk*.7,col:b.col,rad:7,own:'e',life:1,dec:.005});
+          }
+        }
+        spawnVFX(b.x,b.y,b.col,6,4);
+      }
+      // Phase transition
+      b.ptimer+=dt;
+      if(b.ptimer>8){b.ptimer=0;b.phase=b.phase===1?2:1;}
+    }
+  }
+  // Update boss bar
+  if(newActive&&!newActive.dead){
+    activeBoss=newActive;
+    g('bossbar').classList.add('on');
+    g('bossname').textContent=(newActive.enraged?'⚠ ':'')+newActive.ico+' '+newActive.name+(newActive.enraged?' [ENRAGED]':'');
+    g('bossbarfill').style.width=(newActive.hp/newActive.mhp*100)+'%';
+    g('bossbarfill').style.background=newActive.enraged?'linear-gradient(90deg,#800000,#ff0000,#ff8080)':'linear-gradient(90deg,#800000,#ff2020,#ff6060)';
+  } else if(!newActive){
+    activeBoss=null;
+    g('bossbar').classList.remove('on');
+  }
+}
+
+function hitBoss(b,dmg){
+  var crit=Math.random()<.15,fd=Math.floor(dmg*(crit?2:1));
+  b.hp=Math.max(0,b.hp-fd);
+  if(P){
+    var sx=(b.x-P.cx)*P.zoom+window.innerWidth/2;
+    var sy=(b.y-P.cy)*P.zoom+window.innerHeight/2;
+    floatNum(sx,sy-20,(crit?'CRIT! ':'')+fd,crit?'#ffff40':'#ff8080',crit?'1.4rem':'1.1rem');
+  }
+  if(b.hp<=0&&!b.dead)killBoss(b);
+}
+
+function killBoss(b){
+  b.dead=true;b.rt=120;
+  spawnVFX(b.x,b.y,b.col,40,10);spawnVFX(b.x,b.y,'#ffd700',30,8);
+  if(!P)return;
+  var ob=P.bounty;
+  if(b.def&&b.def.grantMax){
+    P.bounty=MAXB;
+    addLog('SERAPH PRIME SLAIN! MAXIMUM BOUNTY ACHIEVED!','b');
+  } else {
+    P.bounty=Math.min(MAXB,P.bounty+b.bty);
+    addLog('BOSS SLAIN: '+b.name+'! +'+fmt(b.bty)+' bounty','b');
+  }
+  P.honor+=b.hon;P.gold+=b.gold;P.xp+=b.xp;
+  addLog('+'+b.hon+' honor  +'+b.gold+' gold  +'+b.xp+' XP','o');
+  chkMile(ob,P.bounty);updBounty(P.bounty,P.honor);chkLvl();
+  showMile(P.bounty);
+  bossAnnounce('kill',b);
+  saveGame();
+}
+
+function drawBosses(){
+  for(var i=0;i<BOSSES.length;i++){
+    var b=BOSSES[i];if(b.dead)continue;
+    // Outer glow ring
+    ctx.shadowColor=b.col;ctx.shadowBlur=b.enraged?40:24;
+    ctx.strokeStyle=b.col;ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(b.x,b.y,b.r+8,0,Math.PI*2);ctx.stroke();
+    ctx.shadowBlur=0;
+    // Shadow
+    ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(b.x,b.y+b.r+4,b.r,b.r*.35,0,0,Math.PI*2);ctx.fill();
+    // Body
+    ctx.shadowColor=b.col;ctx.shadowBlur=b.enraged?30:16;
+    ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    // Icon
+    ctx.font=(b.r*1.1)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(b.ico,b.x,b.y);
+    // HP bar (wide)
+    var bw=b.r*3;
+    ctx.fillStyle='rgba(0,0,0,.7)';ctx.fillRect(b.x-bw/2,b.y-b.r-18,bw,8);
+    ctx.fillStyle=b.hp/b.mhp>.5?'#ff4040':b.hp/b.mhp>.25?'#ff8020':'#ff0000';
+    ctx.fillRect(b.x-bw/2,b.y-b.r-18,bw*(b.hp/b.mhp),8);
+    // Name
+    ctx.fillStyle='#ff8080';ctx.font='bold 11px Georgia,serif';
+    ctx.fillText((b.enraged?'⚠ ':'')+b.name,b.x,b.y-b.r-24);
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  }
+}
+
+// ── SAVE / LOAD (20 slots) ──
+var SAVE_KEY='arcane_dominion_saves';
+var MAX_SAVES=20;
+var activeSaveSlot=0;
+
+function getAllSaves(){
+  try{var r=localStorage.getItem(SAVE_KEY);return r?JSON.parse(r):[];}catch(e){return[];}
+}
+function setSaves(arr){try{localStorage.setItem(SAVE_KEY,JSON.stringify(arr));}catch(e){}}
+
+function saveGame(slot){
+  if(!P)return;
+  var saves=getAllSaves();
+  if(slot===undefined)slot=activeSaveSlot;
+  var data={
+    slot:slot,name:P.name,clsId:P.cls.id,
+    lv:P.lv,xp:P.xp,xpn:P.xpn,
+    mhp:P.mhp,mmp:P.mmp,atk:P.atk,def:P.def,
+    bounty:P.bounty,honor:P.honor,gold:P.gold,
+    x:P.x,y:P.y,ts:Date.now(),
+    bossesKilled:BOSSES.map(function(b){return b.dead?1:0;})
+  };
+  saves[slot]=data;
+  setSaves(saves);
+  showSaveToast();
+}
+
+function loadSave(slot){
+  var saves=getAllSaves();
+  return saves[slot||0]||null;
+}
+
+function hasSave(){var s=getAllSaves();for(var i=0;i<s.length;i++)if(s[i])return true;return false;}
+
+function showSaveToast(){
+  var t=g('savetoast');t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2000);
+}
+
+function applySave(data){
+  var cls=null;
+  for(var i=0;i<CLS.length;i++)if(CLS[i].id===data.clsId){cls=CLS[i];break;}
+  if(!cls)cls=CLS[0];
+  initP(data.name,cls);
+  P.lv=data.lv;P.xp=data.xp;P.xpn=data.xpn;
+  P.mhp=data.mhp;P.hp=data.mhp;
+  P.mmp=data.mmp;P.mp=data.mmp;
+  P.atk=data.atk;P.def=data.def;
+  P.bounty=data.bounty;P.honor=data.honor;P.gold=data.gold;
+  P.x=data.x||600;P.y=data.y||600;P.cx=P.x;P.cy=P.y;
+  if(data.bossesKilled){
+    for(var i=0;i<data.bossesKilled.length&&i<BOSSES.length;i++){
+      if(data.bossesKilled[i]){BOSSES[i].dead=true;BOSSES[i].rt=9999;}
+    }
+  }
+  return cls;
+}
+
+function fmtDate(ts){
+  if(!ts)return'';
+  var d=new Date(ts);
+  return d.toLocaleDateString()+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}
+
+function updSaveInfo(){
+  var saves=getAllSaves();
+  var si=g('save-info');
+  var html='';
+  var hasAny=false;
+  for(var i=0;i<MAX_SAVES;i++){
+    var sv=saves[i];
+    if(sv){hasAny=true;break;}
+  }
+  if(hasAny){
+    html='<div style="font-size:.72rem;color:rgba(255,215,0,.6);margin-bottom:6px">Save Slots:</div>';
+    html+='<div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:500px">';
+    for(var i=0;i<MAX_SAVES;i++){
+      var sv=saves[i];
+      if(sv){
+        html+='<button onclick="loadSlot('+i+')" style="background:rgba(10,5,25,.9);border:1px solid rgba(200,160,60,.4);border-radius:6px;padding:5px 9px;cursor:pointer;color:#fff;font-family:Georgia,serif;font-size:.65rem;text-align:left">';
+        html+='<div style="color:#ffd700;font-weight:bold">'+sv.name+'</div>';
+        html+='<div style="color:rgba(255,255,255,.5)">Lv'+sv.lv+' · '+fmt(sv.bounty)+' bounty</div>';
+        html+='<div style="color:rgba(255,255,255,.3);font-size:.58rem">'+fmtDate(sv.ts)+'</div>';
+        html+='</button>';
+      }
+    }
+    html+='</div>';
+  } else {
+    html='<span style="color:rgba(255,255,255,.3);font-size:.72rem">No saves found.</span>';
+  }
+  si.innerHTML=html;
+}
+
+function loadSlot(slot){
+  var sv=loadSave(slot);if(!sv)return;
+  var cls=null;for(var i=0;i<CLS.length;i++)if(CLS[i].id===sv.clsId){cls=CLS[i];break;}
+  if(!cls)cls=CLS[0];
+  window._cls=cls;activeSaveSlot=slot;
+  mkBosses();
+  var c=applySave(sv);
+  lt=0;showScr('s-game');buildSkBar(c);updBounty(P.bounty,P.honor);
+  running=true;requestAnimationFrame(loop);
+  addLog('Welcome back, '+P.name+'! (Slot '+(slot+1)+')','o');
+}
+
+updSaveInfo();
+
+// ── SERVERS & MULTIPLAYER ──
+var SERVERS=[
+  {id:'world-1',   name:'World Server 1',   desc:'General PvE — all welcome',       icon:'🌍', color:'#4080ff'},
+  {id:'world-2',   name:'World Server 2',   desc:'General PvE — all welcome',       icon:'🌎', color:'#4080ff'},
+  {id:'world-3',   name:'World Server 3',   desc:'General PvE — all welcome',       icon:'🌏', color:'#4080ff'},
+  {id:'world-4',   name:'World Server 4',   desc:'General PvE — all welcome',       icon:'🗺️', color:'#4080ff'},
+  {id:'world-5',   name:'World Server 5',   desc:'General PvE — all welcome',       icon:'🌐', color:'#4080ff'},
+  {id:'bounty-1',  name:'Bounty Hunt I',    desc:'PvP — bounty hunters clash',      icon:'⚔️', color:'#ff4040'},
+  {id:'bounty-2',  name:'Bounty Hunt II',   desc:'High stakes — top bounties',      icon:'💀', color:'#ff2020'},
+  {id:'bounty-3',  name:'Bounty Hunt III',  desc:'Ranked — Wanted+ only',           icon:'🎯', color:'#ff6060'},
+  {id:'elite',     name:'Elite Realm',      desc:'Lv 30+ only',                     icon:'👑', color:'#ffd700'},
+  {id:'elite-2',   name:'Elite Realm II',   desc:'Lv 50+ — endgame grind',          icon:'💎', color:'#80ffff'},
+  {id:'casual',    name:'Casual Realm',     desc:'Relaxed — no bounty loss on death',icon:'🌸', color:'#ff80c0'},
+  {id:'dungeon',   name:'Dungeon Co-op',    desc:'Team up for dungeons',            icon:'🏚️', color:'#a060ff'},
+  {id:'hardcore',  name:'Hardcore',         desc:'Permadeath — one life',           icon:'☠️', color:'#ff0000'},
+  {id:'newbie',    name:'Newbie Zone',      desc:'Lv 1-10 — learn the game',        icon:'🌱', color:'#40c060'},
+  {id:'asia',      name:'Asia Server',      desc:'Low latency for Asia players',    icon:'🏯', color:'#ff8040'},
+  {id:'eu',        name:'EU Server',        desc:'Low latency for EU players',      icon:'🏰', color:'#8080ff'}
+];
+
+var peer=null,mpConns=[],mpPeers={};
+var MP_SEND_INTERVAL=50,mpLastSend=0;
+var currentServer=null;
+var takenNames={}; // pid -> name, tracked per session
+
+// Build server grid
+(function(){
+  var grid=g('srv-grid');
+  SERVERS.forEach(function(s){
+    var btn=document.createElement('button');
+    btn.style.cssText='background:rgba(5,3,15,.9);border:1px solid '+s.color+';border-radius:8px;padding:10px 12px;cursor:pointer;text-align:left;color:#fff;font-family:Georgia,serif;transition:all .2s';
+    btn.innerHTML='<div style="font-size:1.1rem">'+s.icon+'</div><div style="font-size:.78rem;color:'+s.color+';font-weight:bold;margin:2px 0">'+s.name+'</div><div style="font-size:.65rem;color:rgba(255,255,255,.45)">'+s.desc+'</div>';
+    btn.addEventListener('mouseenter',function(){btn.style.boxShadow='0 0 12px '+s.color;});
+    btn.addEventListener('mouseleave',function(){btn.style.boxShadow='';});
+    btn.addEventListener('click',function(){joinServer(s);});
+    grid.appendChild(btn);
+  });
+})();
+
+function joinServer(s){
+  currentServer=s;
+  g('mp-srv-sel').style.display='none';
+  g('mp-connected').style.display='flex';
+  g('mp-srv-name').textContent=s.icon+' '+s.name;
+  initPeer(s.id);
+  addChat('<span style="color:'+s.color+'">Joined '+s.icon+' '+s.name+'</span> — you are now online. Other players on this server can see your ID.','announce');
+  // After peer is ready, try to connect to the server lobby anchor
+  // The lobby anchor is a well-known ID: "ad-lobby-<serverid>"
+  // If it exists (another player is there), we connect to them automatically
+  setTimeout(function(){
+    if(!peer)return;
+    var lobbyId=s.id+'-lobby-anchor';
+    g('mp-status').textContent='Looking for players on '+s.name+'...';
+    var conn=peer.connect(lobbyId,{reliable:true});
+    conn.on('open',function(){
+      mpConns.push(conn);
+      g('mp-status').textContent='Found players on server!';
+      g('mp-peers').textContent='Players in session: '+(mpConns.length+1);
+      conn.on('data',function(data){mpHandleData(conn.peer,data);});
+      conn.on('close',function(){
+        mpConns=mpConns.filter(function(c){return c!==conn;});
+        delete mpPeers[conn.peer];
+        g('mp-peers').textContent='Players in session: '+(mpConns.length+1);
+      });
+    });
+    conn.on('error',function(){
+      // No lobby anchor yet — we become the anchor by trying to claim that ID
+      // Just show solo status
+      g('mp-status').textContent='Solo on server — share your ID for others to join';
+    });
+  },1500);
+}
+
+g('btn-mpleave').addEventListener('click',function(){
+  currentServer=null;
+  g('mp-connected').style.display='none';
+  g('mp-srv-sel').style.display='';
+  if(peer){peer.destroy();peer=null;}
+  mpConns=[];mpPeers={};takenNames={};
+});
+
+g('btn-custom-srv').addEventListener('click',function(){
+  var sid=g('mp-custom-srv').value.trim();if(!sid)return;
+  joinServer({id:sid,name:sid,desc:'Custom server',icon:'🔧',color:'#80c0ff'});
+});
+
+function initPeer(serverPrefix){
+  if(peer)peer.destroy();
+  // Embed server prefix in peer ID so players on different servers can't accidentally connect
+  var pid=(serverPrefix||'ad')+'-'+Math.random().toString(36).slice(2,8);
+  peer=new Peer(pid,{debug:0});
+  peer.on('open',function(id){
+    g('mp-myid').textContent=id;
+    g('mp-status').textContent='Ready — share your ID with friends on this server';
+  });
+  peer.on('connection',function(conn){
+    // Validate same server
+    if(currentServer&&conn.peer.indexOf(currentServer.id+'-')!==0){
+      conn.close();return;
+    }
+    mpSetupConn(conn);
+  });
+  peer.on('error',function(e){g('mp-status').textContent='Error: '+e.type;});
+}
+
+function mpSetupConn(conn){
+  conn.on('open',function(){
+    mpConns.push(conn);
+    g('mp-status').textContent='Connected!';
+    g('mp-peers').textContent='Players in session: '+(mpConns.length+1);
+    addLog(conn.peer.slice(conn.peer.indexOf('-')+1)+'... joined!','o');
+    // Send our name for uniqueness check
+    conn.send({type:'namecheck',name:P?P.name:'',pid:peer.id});
+  });
+  conn.on('data',function(data){mpHandleData(conn.peer,data);});
+  conn.on('close',function(){
+    mpConns=mpConns.filter(function(c){return c!==conn;});
+    delete mpPeers[conn.peer];
+    delete takenNames[conn.peer];
+    g('mp-peers').textContent='Players in session: '+(mpConns.length+1);
+    addLog('A player disconnected.','d');
+    updPeerTags();
+  });
+}
+
+function mpHandleData(pid,data){
+  if(data.type==='namecheck'){
+    takenNames[pid]=data.name;
+    // If name conflicts with ours, notify
+    if(P&&data.name===P.name){
+      // Tell them their name is taken
+      for(var i=0;i<mpConns.length;i++){
+        if(mpConns[i].peer===pid){
+          try{mpConns[i].send({type:'nametaken',takenBy:peer.id});}catch(e){}
+        }
+      }
+    }
+  } else if(data.type==='nametaken'){
+    // Our name is taken — append a suffix
+    if(P){
+      P.name=P.name+'_'+Math.floor(Math.random()*99+1);
+      addChat('<span style="color:#ff8080">Name conflict! Renamed to: <b>'+P.name+'</b></span>','announce');
+    }
+  } else if(data.type==='state'){
+    mpPeers[pid]=data;
+    updPeerTags();
+  } else if(data.type==='chat'){
+    addChat(data.tag+': <span style="color:rgba(255,255,255,.85)">'+data.txt+'</span>','');
+  } else if(data.type==='announce'){
+    addChat(data.html,data.atype);
+  } else if(data.type==='hit'){
+    for(var i=0;i<ENS.length;i++){
+      if(!ENS[i].dead&&Math.abs(ENS[i].x-data.ex)<5&&Math.abs(ENS[i].y-data.ey)<5){
+        hitEnemy(ENS[i],data.dmg);break;
+      }
+    }
+    for(var i=0;i<BOSSES.length;i++){
+      if(!BOSSES[i].dead&&Math.abs(BOSSES[i].x-data.ex)<5&&Math.abs(BOSSES[i].y-data.ey)<5){
+        hitBoss(BOSSES[i],data.dmg);break;
+      }
+    }
+  }
+}
+
+function mpSend(data){
+  for(var i=0;i<mpConns.length;i++){
+    try{mpConns[i].send(data);}catch(e){}
+  }
+}
+
+function mpSendState(){
+  if(!P||!mpConns.length)return;
+  var now=performance.now();
+  if(now-mpLastSend<MP_SEND_INTERVAL)return;
+  mpLastSend=now;
+  mpSend({type:'state',x:P.x,y:P.y,ico:P.ico,col:P.col,name:P.name,hp:P.hp,mhp:P.mhp,facing:P.facing,honor:P.honor,bounty:P.bounty});
+}
+
+function mpSendHit(ex,ey,dmg){
+  mpSend({type:'hit',ex:ex,ey:ey,dmg:dmg});
+}
+
+function updPeerTags(){
+  var pl=g('plist');pl.innerHTML='';
+  var keys=Object.keys(mpPeers);
+  for(var i=0;i<keys.length;i++){
+    var d=mpPeers[keys[i]];
+    var tag=document.createElement('div');tag.className='ptag';
+    tag.textContent=d.ico+' '+d.name+' HP:'+(d.hp|0);
+    pl.appendChild(tag);
+  }
+}
+
+function drawPeers(){
+  var keys=Object.keys(mpPeers);
+  for(var i=0;i<keys.length;i++){
+    var d=mpPeers[keys[i]];
+    ctx.shadowColor=d.col||'#fff';ctx.shadowBlur=14;
+    ctx.fillStyle=d.col||'#fff';ctx.beginPath();ctx.arc(d.x,d.y,18,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.ico||'👤',d.x,d.y);
+
+    // Titles above peer head
+    var pht=d.honor?htitle(d.honor):{s:0,t:''};
+    var pbr=d.bounty?brank(d.bounty):{n:'',c:'#fff'};
+    var yb=d.y-28;
+    if(pht.s>0){
+      ctx.font='bold 10px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+      ctx.shadowColor='#ffd700';ctx.shadowBlur=7;ctx.fillStyle='#ffd700';
+      ctx.fillText('✦ '+pht.t+' ✦',d.x,yb-22);ctx.shadowBlur=0;
+    }
+    if(d.bounty>=10000){
+      ctx.font='bold 10px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+      ctx.shadowColor=pbr.c;ctx.shadowBlur=7;ctx.fillStyle=pbr.c;
+      ctx.fillText('⚔ '+pbr.n,d.x,yb-10);ctx.shadowBlur=0;
+    }
+    ctx.font='bold 11px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+    ctx.fillStyle='rgba(255,255,255,.8)';ctx.fillText(d.name,d.x,yb);
+    if(pht.s>0){ctx.font='9px serif';ctx.fillStyle='#ffd700';ctx.fillText('★'.repeat(pht.s)+'☆'.repeat(5-pht.s),d.x,yb+10);}
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  }
+}
+// ── CHAT ──
+var chatOpen=false;
+
+function chatTag(){
+  if(!P)return'';
+  var br=brank(P.bounty),ht=htitle(P.honor);
+  var tag='';
+  if(P.bounty>=10000)tag+='<span class="ctag" style="color:'+br.c+';border:1px solid '+br.c+'">'+br.n+'</span>';
+  if(ht.s>0)tag+='<span class="ctag" style="color:#ffd700;border:1px solid #ffd700">'+ht.t+'</span>';
+  tag+='<span style="color:'+P.col+'">'+P.ico+' '+P.name+'</span>';
+  return tag;
+}
+
+function addChat(html,type){
+  var log=g('chatlog');
+  var el=document.createElement('div');
+  el.className='cmsg'+(type?' '+type:'');
+  el.innerHTML=html;
+  log.appendChild(el);
+  // Keep max 60 messages
+  while(log.children.length>60)log.removeChild(log.firstChild);
+  log.scrollTop=log.scrollHeight;
+}
+
+function sendChat(txt){
+  if(!txt||!txt.trim())return;
+  txt=txt.trim().slice(0,120);
+  var tag=chatTag();
+  var html=tag+': <span style="color:rgba(255,255,255,.85)">'+escHtml(txt)+'</span>';
+  addChat(html,'');
+  // Broadcast to peers
+  mpSend({type:'chat',tag:tag,txt:escHtml(txt)});
+}
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function bossAnnounce(ev,b){
+  var zoneName=ZONES[b.def.zone].name;
+  var html,type;
+  if(ev==='spawn'){
+    html='<span style="color:#ff6060">⚠ BOSS SPAWNED</span> — '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> has appeared in <b>'+zoneName+'</b>!';
+    type='bossup';
+  } else {
+    var killer=P?chatTag():'Unknown';
+    html='<span style="color:#ffd700">☠ BOSS SLAIN</span> — '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> was defeated by '+killer+' in <b>'+zoneName+'</b>!';
+    type='bossdown';
+  }
+  addChat(html,type);
+  mpSend({type:'announce',html:html,atype:type});
+}
+
+// Chat input toggle with T key
+window.addEventListener('keydown',function(e){
+  if(!running)return;
+  if(e.key==='t'||e.key==='T'){
+    if(document.activeElement!==g('chatinput')){
+      e.preventDefault();
+      g('chatinput').focus();
+    }
+  }
+  if(e.key==='Escape'&&document.activeElement===g('chatinput')){
+    g('chatinput').blur();
+  }
+});
+
+g('chatsend').addEventListener('click',function(){
+  var inp=g('chatinput');sendChat(inp.value);inp.value='';inp.blur();
+});
+g('chatinput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){sendChat(this.value);this.value='';this.blur();e.stopPropagation();}
+  e.stopPropagation(); // prevent game keys while typing
+});
+
+// ── MP TABS ──
+function mpTab(t){
+  g('mp-tab-servers').style.display=t==='servers'?'':'none';
+  g('mp-tab-friends').style.display=t==='friends'?'':'none';
+  g('tab-servers').classList.toggle('on',t==='servers');
+  g('tab-friends').classList.toggle('on',t==='friends');
+}
+
+// ── FRIENDS ──
+var FRIENDS_KEY='arcane_friends';
+function getFriends(){try{var r=localStorage.getItem(FRIENDS_KEY);return r?JSON.parse(r):[];}catch(e){return[];}}
+function saveFriends(f){try{localStorage.setItem(FRIENDS_KEY,JSON.stringify(f));}catch(e){}}
+function addFriend(id,name){
+  if(!id)return;
+  var friends=getFriends();
+  for(var i=0;i<friends.length;i++)if(friends[i].id===id)return;
+  friends.push({id:id,name:name||id.slice(0,14),added:Date.now()});
+  saveFriends(friends);renderFriends();
+}
+function removeFriend(id){saveFriends(getFriends().filter(function(f){return f.id!==id;}));renderFriends();}
+function renderFriends(){
+  var list=g('friends-list');list.innerHTML='';
+  var friends=getFriends();
+  if(!friends.length){list.innerHTML='<div style="font-size:.75rem;color:rgba(255,255,255,.3);text-align:center;padding:10px">No friends yet.</div>';return;}
+  friends.forEach(function(f){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(200,160,60,.2);border-radius:6px;padding:6px 10px';
+    row.innerHTML='<span style="flex:1;font-size:.75rem;color:#fff">'+f.name+'<br><span style="font-size:.6rem;color:rgba(255,255,255,.35)">'+f.id.slice(0,20)+'</span></span>'
+      +'<button onclick="connectToFriend(\''+f.id+'\')" style="background:rgba(64,128,255,.2);border:1px solid #4080ff;border-radius:4px;padding:3px 8px;cursor:pointer;color:#80c0ff;font-size:.65rem">Connect</button>'
+      +'<button onclick="removeFriend(\''+f.id+'\')" style="background:rgba(255,64,64,.15);border:1px solid #ff4040;border-radius:4px;padding:3px 8px;cursor:pointer;color:#ff8080;font-size:.65rem">✕</button>';
+    list.appendChild(row);
+  });
+}
+function connectToFriend(id){
+  if(!peer){addChat('<span style="color:#ff8080">Join a server first!</span>','announce');return;}
+  var conn=peer.connect(id,{reliable:true});mpSetupConn(conn);
+  g('mp-status').textContent='Connecting to friend...';
+}
+g('btn-add-friend').addEventListener('click',function(){
+  var id=g('friend-id-input').value.trim();if(!id)return;
+  addFriend(id);g('friend-id-input').value='';
+});
+g('friend-id-input').addEventListener('keydown',function(e){if(e.key==='Enter'){g('btn-add-friend').click();e.stopPropagation();}e.stopPropagation();});
+
+// When a peer connects, offer to add as friend
+var _mpSetupOrig=mpSetupConn;
+mpSetupConn=function(conn){
+  _mpSetupOrig(conn);
+  conn.on('open',function(){
+    var friends=getFriends(),known=false;
+    for(var i=0;i<friends.length;i++)if(friends[i].id===conn.peer)known=true;
+    if(!known){
+      addChat('<span style="color:#40c060">New player connected! <button onclick="addFriend(\''+conn.peer+'\',\''+conn.peer.slice(0,12)+'\')" style="background:rgba(64,192,64,.2);border:1px solid #40c060;border-radius:3px;padding:1px 7px;cursor:pointer;color:#40c060;font-size:.65rem">+ Add Friend</button></span>','announce');
+    }
+  });
+};
+
+// ── DUNGEONS ──
+// Each dungeon: 10 rounds. Every 5th round (5 and 10) is a boss round.
+// Enemies scale with round number.
+
+var DUNGEONS=[
+  {id:'d0',name:'Crypt of Shadows',icon:'🏚️',col:'#a060ff',minLv:1,
+   mobs:[
+    {n:'Skeleton',ico:'💀',col:'#c0c0a0',hp:80,atk:12,spd:1.5,xp:30,gold:5},
+    {n:'Zombie',ico:'🧟',col:'#608060',hp:120,atk:18,spd:1,xp:45,gold:8},
+    {n:'Ghoul',ico:'�',col:'#80a080',hp:100,atk:15,spd:1.8,xp:38,gold:6}
+   ],
+   bosses:[
+    {n:'Bone Colossus',ico:'🦴',col:'#e0e0c0',hp:1200,atk:50,spd:1,xp:500,gold:120,boss:true},
+    {n:'Crypt Lord',ico:'👑',col:'#a060ff',hp:3000,atk:80,spd:1.2,xp:1500,gold:400,boss:true}
+   ],
+   reward:{gold:500,bounty:2000,honor:20}},
+
+  {id:'d1',name:'Inferno Vault',icon:'🔥',col:'#ff6020',minLv:10,
+   mobs:[
+    {n:'Fire Imp',ico:'😈',col:'#ff6020',hp:180,atk:25,spd:2,xp:60,gold:12},
+    {n:'Lava Golem',ico:'�',col:'#ff4000',hp:280,atk:38,spd:1,xp:90,gold:20},
+    {n:'Ember Wraith',ico:'🔥',col:'#ff8040',hp:220,atk:32,spd:1.8,xp:75,gold:16}
+   ],
+   bosses:[
+    {n:'Inferno Drake',ico:'🐉',col:'#ff2000',hp:3000,atk:90,spd:1.3,xp:1200,gold:350,boss:true},
+    {n:'Magma Titan',ico:'🌋',col:'#ff4000',hp:7000,atk:140,spd:1,xp:3500,gold:900,boss:true}
+   ],
+   reward:{gold:1500,bounty:6000,honor:50}},
+
+  {id:'d2',name:'Void Labyrinth',icon:'🌀',col:'#8000ff',minLv:25,
+   mobs:[
+    {n:'Void Shade',ico:'🌑',col:'#8000ff',hp:350,atk:50,spd:2.2,xp:150,gold:28},
+    {n:'Rift Stalker',ico:'🌀',col:'#6000c0',hp:420,atk:60,spd:1.8,xp:180,gold:35},
+    {n:'Null Fiend',ico:'⬛',col:'#4000a0',hp:500,atk:70,spd:1.5,xp:200,gold:40}
+   ],
+   bosses:[
+    {n:'Void Titan',ico:'🌀',col:'#c000ff',hp:8000,atk:150,spd:1.1,xp:4000,gold:1000,boss:true},
+    {n:'Void Emperor',ico:'👁️',col:'#ff00ff',hp:18000,atk:220,spd:1.3,xp:10000,gold:3000,boss:true}
+   ],
+   reward:{gold:4000,bounty:20000,honor:100}},
+
+  {id:'d3',name:'Abyssal Depths',icon:'🌊',col:'#00c0ff',minLv:40,
+   mobs:[
+    {n:'Deep Horror',ico:'🦑',col:'#0080c0',hp:600,atk:80,spd:1.8,xp:280,gold:55},
+    {n:'Abyss Leviathan',ico:'🐋',col:'#004080',hp:900,atk:100,spd:1.2,xp:380,gold:75},
+    {n:'Tide Wraith',ico:'🌊',col:'#00a0e0',hp:700,atk:90,spd:2,xp:320,gold:62}
+   ],
+   bosses:[
+    {n:'Kraken',ico:'🦑',col:'#0060a0',hp:15000,atk:180,spd:1,xp:8000,gold:2500,boss:true},
+    {n:'Abyssal God',ico:'🌊',col:'#00ffff',hp:35000,atk:280,spd:1.2,xp:20000,gold:7000,boss:true}
+   ],
+   reward:{gold:8000,bounty:50000,honor:200}},
+
+  {id:'d4',name:'Celestial Spire',icon:'👑',col:'#ffd700',minLv:60,
+   mobs:[
+    {n:'Fallen Angel',ico:'😇',col:'#ffffa0',hp:1000,atk:130,spd:2,xp:500,gold:100},
+    {n:'Seraph Guard',ico:'⚔️',col:'#ffffff',hp:1400,atk:160,spd:1.6,xp:650,gold:130},
+    {n:'Divine Sentinel',ico:'✨',col:'#ffd700',hp:1200,atk:145,spd:1.8,xp:580,gold:115}
+   ],
+   bosses:[
+    {n:'Archangel',ico:'👼',col:'#ffffff',hp:30000,atk:250,spd:1.4,xp:15000,gold:5000,boss:true},
+    {n:'Seraph Prime',ico:'👼',col:'#ffffa0',hp:60000,atk:350,spd:1.5,xp:40000,gold:15000,boss:true}
+   ],
+   reward:{gold:20000,bounty:150000,honor:500}}
+];
+
+var dungeon={active:false,def:null,wave:0,enemies:[],cleared:false,paused:false};
+
+function openDungeon(did){
+  if(!running){addLog('Start a game first!','d');return;}
+  var def=null;
+  for(var i=0;i<DUNGEONS.length;i++)if(DUNGEONS[i].id===did){def=DUNGEONS[i];break;}
+  if(!def)return;
+  if(P&&P.lv<def.minLv){addLog('Need Lv '+def.minLv+' for '+def.name,'d');return;}
+  dungeon.active=true;dungeon.def=def;dungeon.wave=0;dungeon.cleared=false;dungeon.enemies=[];
+  // Set CSS color variable
+  g('dungeon-overlay').style.setProperty('--dcol',def.col);
+  g('dungeon-overlay').style.display='flex';
+  g('dungeon-name').textContent=def.icon+' '+def.name;
+  g('dungeon-boss-bar').style.display='none';
+  g('dungeon-msg').textContent='';
+  spawnDungeonWave();
+  addLog('Entered '+def.name+'!','s');
+}
+
+function closeDungeon(){
+  dungeon.active=false;dungeon.enemies=[];
+  g('dungeon-overlay').style.display='none';
+}
+
+function isBossWave(waveNum){
+  // waves are 0-indexed internally, display is 1-indexed
+  // boss on wave 5 (index 4) and wave 10 (index 9)
+  return (waveNum+1)===5||(waveNum+1)===10;
+}
+
+function spawnDungeonWave(){
+  var def=dungeon.def;
+  var waveNum=dungeon.wave;
+  var isBoss=isBossWave(waveNum);
+  dungeon.enemies=[];
+
+  if(isBoss){
+    // Boss wave: spawn the appropriate boss (wave 5 = boss[0], wave 10 = boss[1])
+    var bossIdx=(waveNum+1)===5?0:1;
+    var bd=def.bosses[bossIdx];
+    var ex=P.x+rnd(-120,120),ey=P.y+rnd(-120,120);
+    dungeon.enemies.push({
+      name:bd.n,ico:bd.ico,col:bd.col,
+      x:ex,y:ey,hp:bd.hp,mhp:bd.hp,
+      atk:bd.atk,spd:bd.spd,xp:bd.xp,gold:bd.gold,
+      boss:true,dead:false,atimer:0,stun:0
+    });
+    g('dungeon-boss-bar').style.display='';
+    g('dungeon-boss-name').textContent='⚠ BOSS: '+bd.n;
+    g('dungeon-boss-fill').style.width='100%';
+    addLog('⚠ BOSS WAVE! '+bd.n+' appears!','d');
+  } else {
+    // Normal wave: scale enemy count and HP with wave number
+    var count=2+Math.floor(waveNum*0.8); // 2,2,3,4 enemies per wave
+    var hpScale=1+waveNum*0.15;
+    var atkScale=1+waveNum*0.12;
+    for(var i=0;i<count;i++){
+      var md=def.mobs[ri(0,def.mobs.length-1)];
+      var ex=P.x+rnd(-200,200),ey=P.y+rnd(-200,200);
+      dungeon.enemies.push({
+        name:md.n,ico:md.ico,col:md.col,
+        x:ex,y:ey,
+        hp:Math.floor(md.hp*hpScale),mhp:Math.floor(md.hp*hpScale),
+        atk:Math.floor(md.atk*atkScale),spd:md.spd,
+        xp:md.xp,gold:md.gold,
+        boss:false,dead:false,atimer:0,stun:0
+      });
+    }
+    g('dungeon-boss-bar').style.display='none';
+  }
+
+  updDungeonUI();
+}
+
+function updDungeonUI(){
+  if(!dungeon.active)return;
+  var alive=dungeon.enemies.filter(function(e){return!e.dead;}).length;
+  var isBoss=isBossWave(dungeon.wave);
+  g('dungeon-wave').textContent=(isBoss?'⚠ BOSS — ':'')+'Round '+(dungeon.wave+1)+' / 10';
+  g('dungeon-enemies').textContent=alive+' enem'+(alive===1?'y':'ies')+' remaining';
+  // Update boss HP bar if boss wave
+  if(isBoss&&dungeon.enemies.length>0){
+    var b=dungeon.enemies[0];
+    if(!b.dead)g('dungeon-boss-fill').style.width=(b.hp/b.mhp*100)+'%';
+  }
+}
+
+function hitDungeonEnemy(e,dmg){
+  var crit=Math.random()<.15,fd=Math.floor(dmg*(crit?2:1));
+  e.hp=Math.max(0,e.hp-fd);
+  if(P){
+    var sx=(e.x-P.cx)*P.zoom+window.innerWidth/2;
+    var sy=(e.y-P.cy)*P.zoom+window.innerHeight/2;
+    floatNum(sx,sy-20,(crit?'CRIT! ':'')+fd,crit?'#ffff40':'#ff8080',crit?'1.3rem':'1rem');
+  }
+  if(e.hp<=0&&!e.dead){
+    e.dead=true;spawnVFX(e.x,e.y,e.col,e.boss?30:14,e.boss?8:5);
+    if(P){P.xp+=e.xp;P.gold+=e.gold;chkLvl();}
+  }
+}
+
+function updDungeon(dt){
+  if(!dungeon.active||dungeon.cleared)return;
+  for(var i=0;i<dungeon.enemies.length;i++){
+    var e=dungeon.enemies[i];if(e.dead)continue;
+    if(e.stun>0){e.stun-=dt;continue;}
+    if(!P)continue;
+    var d=dst(e,P),a=ang(e,P);
+    e.x+=Math.cos(a)*e.spd;e.y+=Math.sin(a)*e.spd;
+    if(d<(e.boss?50:45)){
+      e.atimer-=dt;
+      if(e.atimer<=0){
+        e.atimer=e.boss?1:1.4;
+        // Boss fires projectiles, normal enemies melee
+        if(e.boss){firePrj(e.x,e.y,P.x,P.y,e.atk,e.col,8,7,'e');}
+        else{pHit(e.atk);}
+      }
+    }
+  }
+  var alive=dungeon.enemies.filter(function(e){return!e.dead;});
+  if(alive.length===0){
+    dungeon.wave++;
+    if(dungeon.wave>=10){
+      // All 10 rounds cleared
+      dungeon.cleared=true;
+      var r=dungeon.def.reward;
+      P.gold+=r.gold;P.bounty=Math.min(MAXB,P.bounty+r.bounty);P.honor+=r.honor;
+      updBounty(P.bounty,P.honor);
+      g('dungeon-wave').textContent='✦ DUNGEON CLEARED! ✦';
+      g('dungeon-enemies').textContent='+'+r.gold+' gold  +'+fmt(r.bounty)+' bounty  +'+r.honor+' honor';
+      g('dungeon-boss-bar').style.display='none';
+      g('dungeon-msg').textContent='All 10 rounds complete!';
+      addLog('DUNGEON CLEARED: '+dungeon.def.name+'!','o');
+      addChat('<span style="color:#ffd700">'+P.name+' cleared '+dungeon.def.icon+' '+dungeon.def.name+'! 🏆</span>','announce');
+      saveGame();
+    } else {
+      // Brief pause between waves
+      g('dungeon-msg').textContent='Wave cleared! Next wave in 2s...';
+      dungeon.active=false; // pause enemy updates
+      setTimeout(function(){
+        dungeon.active=true;
+        g('dungeon-msg').textContent='';
+        spawnDungeonWave();
+      },2000);
+    }
+  } else {
+    updDungeonUI();
+  }
+}
+
+function drawDungeonEnemies(){
+  if(!dungeon.active&&!dungeon.cleared)return;
+  for(var i=0;i<dungeon.enemies.length;i++){
+    var e=dungeon.enemies[i];if(e.dead)continue;
+    var sz=e.boss?40:20;
+    ctx.shadowColor=e.col;ctx.shadowBlur=e.boss?32:14;
+    ctx.fillStyle=e.col;ctx.beginPath();ctx.arc(e.x,e.y,sz,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.font=(e.boss?30:17)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(e.ico,e.x,e.y);
+    var bw=sz*2.4;
+    ctx.fillStyle='rgba(0,0,0,.65)';ctx.fillRect(e.x-bw/2,e.y-sz-16,bw,7);
+    ctx.fillStyle=e.hp/e.mhp>.5?'#40c040':e.hp/e.mhp>.25?'#c0c040':'#c04040';
+    ctx.fillRect(e.x-bw/2,e.y-sz-16,bw*(e.hp/e.mhp),7);
+    ctx.fillStyle=e.boss?'#ff8080':'rgba(255,255,255,.7)';
+    ctx.font=(e.boss?'bold 11':'9')+'px Georgia,serif';
+    ctx.fillText(e.name,e.x,e.y-sz-22);
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';
+  }
+}
+
+</script>
+</body>
+</html>
