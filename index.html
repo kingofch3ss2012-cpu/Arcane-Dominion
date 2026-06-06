@@ -164,7 +164,7 @@ canvas{display:block}
 @keyframes rotateHint{from{transform:rotate(0deg)}to{transform:rotate(90deg)}}
 #orient-screen p{color:rgba(255,255,255,.7);font-size:1rem;text-align:center;padding:0 30px}
 
-/* MOBILE JOYSTICK — bottom-left, well clear of chat */
+/* MOBILE JOYSTICK â€” bottom-left, well clear of chat */
 #joystick-zone{position:fixed;bottom:20px;left:20px;width:130px;height:130px;z-index:22;display:none;touch-action:none}
 #joystick-base{width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);position:absolute}
 #joystick-knob{width:52px;height:52px;border-radius:50%;background:rgba(255,215,0,.5);border:2px solid rgba(255,215,0,.8);position:absolute;top:39px;left:39px;box-shadow:0 0 12px rgba(255,215,0,.4)}
@@ -175,7 +175,7 @@ canvas{display:block}
 .mob-sk-cd.on{opacity:1}
 /* aim zone: middle of screen, avoids joystick (left) and skill buttons (right) */
 #mobile-aim{position:fixed;top:0;left:160px;right:80px;bottom:0;z-index:8;display:none;touch-action:none}
-/* CHAT — top-left, above joystick area */
+/* CHAT â€” top-left, above joystick area */
 #chat{position:fixed;top:80px;left:14px;width:240px;z-index:12;display:flex;flex-direction:column;gap:4px}
 /* AIM RETICLE */
 #aim-reticle{position:fixed;pointer-events:none;z-index:16;display:none;transform:translate(-50%,-50%)}
@@ -197,7 +197,7 @@ canvas{display:block}
 
 <!-- ORIENTATION WARNING (mobile only) -->
 <div id="orient-screen">
-  <div id="orient-icon">📱</div>
+  <div id="orient-icon">ðŸ“±</div>
   <p>Please rotate your device to <b style="color:#ffd700">landscape</b> mode to play.</p>
 </div>
 
@@ -206,8 +206,8 @@ canvas{display:block}
   <h2>ARCANE DOMINION</h2>
   <p>How are you playing?</p>
   <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
-    <button class="btn" id="btn-pc" style="font-size:1.1rem;padding:18px 36px">🖥️ PC / Desktop</button>
-    <button class="btn" id="btn-mobile" style="font-size:1.1rem;padding:18px 36px;background:linear-gradient(135deg,#204060,#4080a0);color:#fff">📱 Mobile</button>
+    <button class="btn" id="btn-pc" style="font-size:1.1rem;padding:18px 36px">ðŸ–¥ï¸ PC / Desktop</button>
+    <button class="btn" id="btn-mobile" style="font-size:1.1rem;padding:18px 36px;background:linear-gradient(135deg,#204060,#4080a0);color:#fff">ðŸ“± Mobile</button>
   </div>
 </div>
 
@@ -260,7 +260,7 @@ canvas{display:block}
       </div>
       <div class="hdisplay">
         <div class="hlabel">Honor</div>
-        <div class="hstars" id="hstars">☆☆☆☆☆</div>
+        <div class="hstars" id="hstars">â˜†â˜†â˜†â˜†â˜†</div>
         <div class="htitle" id="htitle">Wanderer</div>
       </div>
     </div>
@@ -280,7 +280,7 @@ canvas{display:block}
   <div id="clog"></div>
   <div id="story" class="hide">
     <div id="sport"></div>
-    <div id="sbody"><div id="sspk"></div><div id="stxt"></div><button id="snxt">Continue ▶</button></div>
+    <div id="sbody"><div id="sspk"></div><div id="stxt"></div><button id="snxt">Continue â–¶</button></div>
   </div>
   <div id="pmenu" class="hide">
     <div class="pbox"><h2>Paused</h2><button class="mbtn" id="btn-res">Resume</button><button class="mbtn" id="btn-save-now">Save Game</button><button class="mbtn" id="btn-quit">Quit to Menu</button></div>
@@ -316,28 +316,28 @@ canvas{display:block}
   <!-- DUNGEON ENTRY BUTTONS (shown only in-game) -->
   <div id="dungeon-btn" style="position:fixed;bottom:82px;right:14px;display:flex;flex-direction:column;gap:5px;z-index:11;pointer-events:all">
     <div style="font-size:.58rem;color:rgba(255,255,255,.3);text-align:center;letter-spacing:.08em">DUNGEONS</div>
-    <button onclick="openDungeon('d0')" style="background:rgba(96,64,128,.85);border:1px solid #a060ff;border-radius:6px;padding:5px 10px;cursor:pointer;color:#c080ff;font-size:.7rem;font-family:Georgia,serif;text-align:left">🏚️ Crypt <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv1+</span></button>
-    <button onclick="openDungeon('d1')" style="background:rgba(128,40,20,.85);border:1px solid #ff6020;border-radius:6px;padding:5px 10px;cursor:pointer;color:#ff8040;font-size:.7rem;font-family:Georgia,serif;text-align:left">🔥 Inferno <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv10+</span></button>
-    <button onclick="openDungeon('d2')" style="background:rgba(60,0,120,.85);border:1px solid #8000ff;border-radius:6px;padding:5px 10px;cursor:pointer;color:#c060ff;font-size:.7rem;font-family:Georgia,serif;text-align:left">🌀 Void <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv25+</span></button>
-    <button onclick="openDungeon('d3')" style="background:rgba(0,60,80,.85);border:1px solid #00c0ff;border-radius:6px;padding:5px 10px;cursor:pointer;color:#40d0ff;font-size:.7rem;font-family:Georgia,serif;text-align:left">🌊 Abyss <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv40+</span></button>
-    <button onclick="openDungeon('d4')" style="background:rgba(80,60,0,.85);border:1px solid #ffd700;border-radius:6px;padding:5px 10px;cursor:pointer;color:#ffd700;font-size:.7rem;font-family:Georgia,serif;text-align:left">👑 Celestial <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv60+</span></button>
+    <button onclick="openDungeon('d0')" style="background:rgba(96,64,128,.85);border:1px solid #a060ff;border-radius:6px;padding:5px 10px;cursor:pointer;color:#c080ff;font-size:.7rem;font-family:Georgia,serif;text-align:left">ðŸšï¸ Crypt <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv1+</span></button>
+    <button onclick="openDungeon('d1')" style="background:rgba(128,40,20,.85);border:1px solid #ff6020;border-radius:6px;padding:5px 10px;cursor:pointer;color:#ff8040;font-size:.7rem;font-family:Georgia,serif;text-align:left">ðŸ”¥ Inferno <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv10+</span></button>
+    <button onclick="openDungeon('d2')" style="background:rgba(60,0,120,.85);border:1px solid #8000ff;border-radius:6px;padding:5px 10px;cursor:pointer;color:#c060ff;font-size:.7rem;font-family:Georgia,serif;text-align:left">ðŸŒ€ Void <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv25+</span></button>
+    <button onclick="openDungeon('d3')" style="background:rgba(0,60,80,.85);border:1px solid #00c0ff;border-radius:6px;padding:5px 10px;cursor:pointer;color:#40d0ff;font-size:.7rem;font-family:Georgia,serif;text-align:left">ðŸŒŠ Abyss <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv40+</span></button>
+    <button onclick="openDungeon('d4')" style="background:rgba(80,60,0,.85);border:1px solid #ffd700;border-radius:6px;padding:5px 10px;cursor:pointer;color:#ffd700;font-size:.7rem;font-family:Georgia,serif;text-align:left">ðŸ‘‘ Celestial <span style="color:rgba(255,255,255,.4);font-size:.6rem">Lv60+</span></button>
   </div>
 </div>
 
-<!-- DUNGEON OVERLAY (outside game screen, always accessible) -->
-<div id="dungeon-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:40;flex-direction:column;align-items:center;justify-content:center">
-  <div style="background:rgba(5,3,20,.98);border:2px solid var(--dcol,#a060ff);border-radius:14px;padding:28px 36px;min-width:340px;max-width:92vw;text-align:center;box-shadow:0 0 60px var(--dcol,#a060ff)">
-    <div id="dungeon-name" style="font-size:1.3rem;font-weight:bold;color:var(--dcol,#c080ff);margin-bottom:4px"></div>
-    <div id="dungeon-wave" style="font-size:.9rem;color:#ffd700;margin-bottom:3px"></div>
-    <div id="dungeon-enemies" style="font-size:.78rem;color:rgba(255,255,255,.6);margin-bottom:6px"></div>
-    <div id="dungeon-boss-bar" style="display:none;margin-bottom:10px">
-      <div style="font-size:.72rem;color:#ff4040;margin-bottom:3px" id="dungeon-boss-name"></div>
-      <div style="height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;border:1px solid rgba(255,64,64,.4)">
-        <div id="dungeon-boss-fill" style="height:100%;background:linear-gradient(90deg,#800000,#ff2020);border-radius:5px;transition:width .3s;width:100%"></div>
+<!-- DUNGEON HUD (small top-center panel, shown while inside a dungeon) -->
+<div id="dungeon-overlay" style="display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:40;pointer-events:all">
+  <div style="background:rgba(5,3,20,.96);border:2px solid var(--dcol,#a060ff);border-radius:10px;padding:10px 20px;min-width:280px;max-width:92vw;text-align:center;box-shadow:0 0 30px var(--dcol,#a060ff)">
+    <div id="dungeon-name" style="font-size:.95rem;font-weight:bold;color:var(--dcol,#c080ff);margin-bottom:2px"></div>
+    <div id="dungeon-wave" style="font-size:.8rem;color:#ffd700;margin-bottom:2px"></div>
+    <div id="dungeon-enemies" style="font-size:.72rem;color:rgba(255,255,255,.6);margin-bottom:4px"></div>
+    <div id="dungeon-boss-bar" style="display:none;margin-bottom:6px">
+      <div style="font-size:.68rem;color:#ff4040;margin-bottom:2px" id="dungeon-boss-name"></div>
+      <div style="height:8px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;border:1px solid rgba(255,64,64,.4)">
+        <div id="dungeon-boss-fill" style="height:100%;background:linear-gradient(90deg,#800000,#ff2020);border-radius:4px;transition:width .3s;width:100%"></div>
       </div>
     </div>
-    <div id="dungeon-msg" style="font-size:.8rem;color:rgba(255,255,255,.5);min-height:20px;margin-bottom:12px"></div>
-    <button onclick="closeDungeon()" style="background:rgba(255,255,255,.06);border:1px solid rgba(200,160,60,.4);border-radius:6px;padding:8px 24px;cursor:pointer;color:rgba(255,255,255,.7);font-family:Georgia,serif;font-size:.82rem">Exit Dungeon</button>
+    <div id="dungeon-msg" style="font-size:.72rem;color:rgba(255,255,255,.5);min-height:16px;margin-bottom:6px"></div>
+    <button onclick="closeDungeon()" style="background:rgba(255,255,255,.06);border:1px solid rgba(200,160,60,.4);border-radius:5px;padding:5px 18px;cursor:pointer;color:rgba(255,255,255,.7);font-family:Georgia,serif;font-size:.75rem">Exit Dungeon</button>
   </div>
 </div>
 
@@ -356,7 +356,7 @@ canvas{display:block}
     <!-- SERVERS TAB -->
     <div id="mp-tab-servers" style="width:100%">
       <div id="mp-srv-sel" style="width:100%">
-        <p style="margin-bottom:10px;font-size:.78rem;color:rgba(255,255,255,.5)">Pick a server — you join solo, others may be there too:</p>
+        <p style="margin-bottom:10px;font-size:.78rem;color:rgba(255,255,255,.5)">Pick a server â€” you join solo, others may be there too:</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-bottom:10px" id="srv-grid"></div>
         <div style="display:flex;gap:8px;align-items:center;width:100%">
           <input class="mpinput" id="mp-custom-srv" placeholder="Custom server ID..." maxlength="30" style="flex:1">
@@ -370,7 +370,7 @@ canvas{display:block}
           <input class="mpinput" id="mp-joinid" placeholder="Connect to player ID..." maxlength="40" style="flex:1">
           <button class="btn" id="btn-mpjoin" style="padding:9px 12px">Connect</button>
         </div>
-        <div id="mp-status" style="font-size:.72rem;color:rgba(255,255,255,.45)">Solo — no players connected yet</div>
+        <div id="mp-status" style="font-size:.72rem;color:rgba(255,255,255,.45)">Solo â€” no players connected yet</div>
         <div id="mp-peers" style="font-size:.72rem;color:#40c060"></div>
         <button class="mbtn" id="btn-mpleave" style="padding:7px 20px">Leave Server</button>
       </div>
@@ -388,7 +388,7 @@ canvas{display:block}
 </div>
 
 <!-- SAVE TOAST -->
-<div id="savetoast">Game Saved ✓</div>
+<div id="savetoast">Game Saved âœ“</div>
 <!-- PLAYER TAGS -->
 <div id="plist"></div>
 
@@ -397,12 +397,12 @@ canvas{display:block}
   <div id="chatlog"></div>
   <div id="chatrow">
     <input id="chatinput" maxlength="120" placeholder="Press T to chat..." autocomplete="off">
-    <button id="chatsend">➤</button>
+    <button id="chatsend">âž¤</button>
   </div>
 </div>
 
 <script>
-// ── HELPERS ──
+// â”€â”€ HELPERS â”€â”€
 function g(id){return document.getElementById(id)}
 function lerp(a,b,t){return a+(b-a)*t}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
@@ -434,91 +434,91 @@ function showScr(id){
   }
 }
 
-// ── CLASSES ──
+// â”€â”€ CLASSES â”€â”€
 var CLS=[
-  {id:'archmage',name:'Archmage',ico:'🧙',role:'Spellcaster',col:'#a040ff',
+  {id:'archmage',name:'Archmage',ico:'ðŸ§™',role:'Spellcaster',col:'#a040ff',
    desc:'Master of arcane forces. Devastating spells that reshape reality itself.',
    tags:['High MP','Spell Damage','Low Defense'],
    st:{hp:80,mp:160,atk:12,def:5,spd:3.2},
    sk:[
-    {n:'Arcane Bolt',i:'⚡',cd:.8,mp:10,dm:1.8,rng:320,t:'proj',col:'#a040ff',d:'Fires a bolt of arcane energy.'},
-    {n:'Frost Nova',i:'❄️',cd:5,mp:30,dm:2.2,rng:140,t:'aoe',col:'#80c0ff',d:'Freezes all nearby enemies.'},
-    {n:'Meteor',i:'☄️',cd:12,mp:60,dm:5,rng:400,t:'aoe',col:'#ff8040',d:'Calls down a devastating meteor.'},
-    {n:'Time Warp',i:'🌀',cd:25,mp:80,dm:0,rng:0,t:'buff',col:'#40ffff',d:'Resets all cooldowns instantly.'}
+    {n:'Arcane Bolt',i:'âš¡',cd:.8,mp:10,dm:1.8,rng:320,t:'proj',col:'#a040ff',d:'Fires a bolt of arcane energy.'},
+    {n:'Frost Nova',i:'â„ï¸',cd:5,mp:30,dm:2.2,rng:140,t:'aoe',col:'#80c0ff',d:'Freezes all nearby enemies.'},
+    {n:'Meteor',i:'â˜„ï¸',cd:12,mp:60,dm:5,rng:400,t:'aoe',col:'#ff8040',d:'Calls down a devastating meteor.'},
+    {n:'Time Warp',i:'ðŸŒ€',cd:25,mp:80,dm:0,rng:0,t:'buff',col:'#40ffff',d:'Resets all cooldowns instantly.'}
    ]},
-  {id:'shadowmage',name:'Shadow Mage',ico:'🌑',role:'Dark Caster',col:'#8020c0',
+  {id:'shadowmage',name:'Shadow Mage',ico:'ðŸŒ‘',role:'Dark Caster',col:'#8020c0',
    desc:'Weaves shadow and death magic. Drains life and curses enemies into oblivion.',
    tags:['Life Drain','Curses','Dark Magic'],
    st:{hp:90,mp:130,atk:14,def:6,spd:3.5},
    sk:[
-    {n:'Shadow Bolt',i:'🌑',cd:1,mp:12,dm:1.6,rng:300,t:'proj',col:'#8020c0',d:'Hurls a bolt of shadow energy.'},
-    {n:'Life Drain',i:'💀',cd:6,mp:35,dm:1.8,rng:180,t:'drain',col:'#c040ff',d:'Drains life from nearby enemies.'},
-    {n:'Death Curse',i:'☠️',cd:10,mp:50,dm:3.5,rng:250,t:'proj',col:'#400060',d:'Curses an enemy with dark energy.'},
-    {n:'Shadow Step',i:'👁️',cd:18,mp:60,dm:0,rng:200,t:'tele',col:'#200040',d:'Teleports to cursor position.'}
+    {n:'Shadow Bolt',i:'ðŸŒ‘',cd:1,mp:12,dm:1.6,rng:300,t:'proj',col:'#8020c0',d:'Hurls a bolt of shadow energy.'},
+    {n:'Life Drain',i:'ðŸ’€',cd:6,mp:35,dm:1.8,rng:180,t:'drain',col:'#c040ff',d:'Drains life from nearby enemies.'},
+    {n:'Death Curse',i:'â˜ ï¸',cd:10,mp:50,dm:3.5,rng:250,t:'proj',col:'#400060',d:'Curses an enemy with dark energy.'},
+    {n:'Shadow Step',i:'ðŸ‘ï¸',cd:18,mp:60,dm:0,rng:200,t:'tele',col:'#200040',d:'Teleports to cursor position.'}
    ]},
-  {id:'stormcaller',name:'Stormcaller',ico:'⚡',role:'Elemental',col:'#40a0ff',
+  {id:'stormcaller',name:'Stormcaller',ico:'âš¡',role:'Elemental',col:'#40a0ff',
    desc:'Commands lightning and storms. Chains electricity between enemies.',
    tags:['Chain Lightning','Storm AoE','High Speed'],
    st:{hp:85,mp:140,atk:15,def:6,spd:3.8},
    sk:[
-    {n:'Lightning',i:'⚡',cd:.6,mp:8,dm:1.5,rng:350,t:'proj',col:'#80d0ff',d:'Fires a lightning bolt.'},
-    {n:'Chain Storm',i:'🌩️',cd:5,mp:30,dm:2,rng:200,t:'chain',col:'#40a0ff',d:'Lightning chains between 4 enemies.'},
-    {n:'Thunderstrike',i:'🌪️',cd:10,mp:55,dm:4,rng:300,t:'aoe',col:'#0060ff',d:'Calls a massive thunderstrike.'},
-    {n:'Storm Surge',i:'💨',cd:20,mp:70,dm:0,rng:0,t:'buff',col:'#80ffff',d:'Doubles speed for 8 seconds.'}
+    {n:'Lightning',i:'âš¡',cd:.6,mp:8,dm:1.5,rng:350,t:'proj',col:'#80d0ff',d:'Fires a lightning bolt.'},
+    {n:'Chain Storm',i:'ðŸŒ©ï¸',cd:5,mp:30,dm:2,rng:200,t:'chain',col:'#40a0ff',d:'Lightning chains between 4 enemies.'},
+    {n:'Thunderstrike',i:'ðŸŒªï¸',cd:10,mp:55,dm:4,rng:300,t:'aoe',col:'#0060ff',d:'Calls a massive thunderstrike.'},
+    {n:'Storm Surge',i:'ðŸ’¨',cd:20,mp:70,dm:0,rng:0,t:'buff',col:'#80ffff',d:'Doubles speed for 8 seconds.'}
    ]},
-  {id:'assassin',name:'Assassin',ico:'🗡️',role:'Rogue',col:'#909090',
+  {id:'assassin',name:'Assassin',ico:'ðŸ—¡ï¸',role:'Rogue',col:'#909090',
    desc:'Strikes from the shadows with lethal precision. One hit can end a fight.',
    tags:['Critical Hits','Stealth','High Speed'],
    st:{hp:95,mp:80,atk:22,def:7,spd:5},
    sk:[
-    {n:'Backstab',i:'🗡️',cd:0.4,mp:10,dm:3,rng:60,t:'melee',col:'#808080',d:'Deals massive damage up close.'},
-    {n:'Smoke Bomb',i:'💨',cd:6,mp:20,dm:0,rng:100,t:'aoe',col:'#404040',d:'Blinds nearby enemies.'},
-    {n:'Shadow Dash',i:'💨',cd:4,mp:15,dm:2.5,rng:200,t:'dash',col:'#606060',d:'Dashes through enemies dealing damage.'},
-    {n:'Death Mark',i:'💀',cd:15,mp:50,dm:8,rng:300,t:'exec',col:'#ff2020',d:'Marks an enemy for instant death.'}
+    {n:'Backstab',i:'ðŸ—¡ï¸',cd:0.4,mp:10,dm:3,rng:60,t:'melee',col:'#808080',d:'Deals massive damage up close.'},
+    {n:'Smoke Bomb',i:'ðŸ’¨',cd:6,mp:20,dm:0,rng:100,t:'aoe',col:'#404040',d:'Blinds nearby enemies.'},
+    {n:'Shadow Dash',i:'ðŸ’¨',cd:4,mp:15,dm:2.5,rng:200,t:'dash',col:'#606060',d:'Dashes through enemies dealing damage.'},
+    {n:'Death Mark',i:'ðŸ’€',cd:15,mp:50,dm:8,rng:300,t:'exec',col:'#ff2020',d:'Marks an enemy for instant death.'}
    ]},
-  {id:'swordsman',name:'Swordsman',ico:'⚔️',role:'Warrior',col:'#c08040',
+  {id:'swordsman',name:'Swordsman',ico:'âš”ï¸',role:'Warrior',col:'#c08040',
    desc:'A master of the blade. Raw power and disciplined technique dominate the battlefield.',
    tags:['High HP','High Defense','Balanced'],
    st:{hp:140,mp:60,atk:18,def:14,spd:3.8},
    sk:[
-    {n:'Slash',i:'⚔️',cd:.5,mp:5,dm:1.4,rng:80,t:'melee',col:'#c08040',d:'A swift sword slash.'},
-    {n:'Whirlwind',i:'🌀',cd:6,mp:25,dm:2,rng:100,t:'aoe',col:'#ffa040',d:'Spins dealing damage to all nearby.'},
-    {n:'Shield Bash',i:'🛡️',cd:8,mp:20,dm:1.5,rng:70,t:'stun',col:'#8080c0',d:'Stuns an enemy with your shield.'},
-    {n:'Blade Storm',i:'⚡',cd:20,mp:50,dm:5,rng:120,t:'aoe',col:'#ffcc40',d:'Unleashes a devastating blade storm.'}
+    {n:'Slash',i:'âš”ï¸',cd:.5,mp:5,dm:1.4,rng:80,t:'melee',col:'#c08040',d:'A swift sword slash.'},
+    {n:'Whirlwind',i:'ðŸŒ€',cd:6,mp:25,dm:2,rng:100,t:'aoe',col:'#ffa040',d:'Spins dealing damage to all nearby.'},
+    {n:'Shield Bash',i:'ðŸ›¡ï¸',cd:8,mp:20,dm:1.5,rng:70,t:'stun',col:'#8080c0',d:'Stuns an enemy with your shield.'},
+    {n:'Blade Storm',i:'âš¡',cd:20,mp:50,dm:5,rng:120,t:'aoe',col:'#ffcc40',d:'Unleashes a devastating blade storm.'}
    ]},
-  {id:'paladin',name:'Paladin',ico:'✨',role:'Holy Warrior',col:'#ffe080',
+  {id:'paladin',name:'Paladin',ico:'âœ¨',role:'Holy Warrior',col:'#ffe080',
    desc:'Blessed by divine light. Heals, smites evil, and stands as an unbreakable wall of faith.',
    tags:['Healing','Holy Damage','Tank'],
    st:{hp:160,mp:100,atk:14,def:18,spd:3},
    sk:[
-    {n:'Holy Strike',i:'✨',cd:.8,mp:8,dm:1.6,rng:80,t:'melee',col:'#ffe080',d:'A strike infused with holy light.'},
-    {n:'Divine Shield',i:'🛡️',cd:12,mp:40,dm:0,rng:0,t:'shield',col:'#ffffff',d:'Invulnerable for 3 seconds.'},
-    {n:'Holy Nova',i:'💫',cd:8,mp:35,dm:2.5,rng:150,t:'aoe',col:'#ffff80',d:'Burst of holy energy.'},
-    {n:'Judgment',i:'⚖️',cd:18,mp:60,dm:6,rng:200,t:'proj',col:'#ffd700',d:'Calls divine judgment on an enemy.'}
+    {n:'Holy Strike',i:'âœ¨',cd:.8,mp:8,dm:1.6,rng:80,t:'melee',col:'#ffe080',d:'A strike infused with holy light.'},
+    {n:'Divine Shield',i:'ðŸ›¡ï¸',cd:12,mp:40,dm:0,rng:0,t:'shield',col:'#ffffff',d:'Invulnerable for 3 seconds.'},
+    {n:'Holy Nova',i:'ðŸ’«',cd:8,mp:35,dm:2.5,rng:150,t:'aoe',col:'#ffff80',d:'Burst of holy energy.'},
+    {n:'Judgment',i:'âš–ï¸',cd:18,mp:60,dm:6,rng:200,t:'proj',col:'#ffd700',d:'Calls divine judgment on an enemy.'}
    ]},
-  {id:'ranger',name:'Ranger',ico:'🏹',role:'Marksman',col:'#40c060',
+  {id:'ranger',name:'Ranger',ico:'ðŸ¹',role:'Marksman',col:'#40c060',
    desc:'A deadly archer who strikes from afar. Traps, poisons, and precision shots.',
    tags:['Long Range','Poison','High Crit'],
    st:{hp:100,mp:90,atk:16,def:8,spd:4.2},
    sk:[
-    {n:'Arrow Shot',i:'🏹',cd:.4,mp:5,dm:1.3,rng:450,t:'proj',col:'#40c060',d:'Fires a precise arrow.'},
-    {n:'Poison Arrow',i:'☠️',cd:5,mp:20,dm:1.5,rng:400,t:'proj',col:'#80ff40',d:'Poisons the target over time.'},
-    {n:'Rain of Arrows',i:'🌧️',cd:10,mp:45,dm:3,rng:350,t:'aoe',col:'#20a040',d:'Rains arrows on a target area.'},
-    {n:'Eagle Eye',i:'🦅',cd:20,mp:50,dm:10,rng:600,t:'proj',col:'#c0ff80',d:'A single devastating sniper shot.'}
+    {n:'Arrow Shot',i:'ðŸ¹',cd:.4,mp:5,dm:1.3,rng:450,t:'proj',col:'#40c060',d:'Fires a precise arrow.'},
+    {n:'Poison Arrow',i:'â˜ ï¸',cd:5,mp:20,dm:1.5,rng:400,t:'proj',col:'#80ff40',d:'Poisons the target over time.'},
+    {n:'Rain of Arrows',i:'ðŸŒ§ï¸',cd:10,mp:45,dm:3,rng:350,t:'aoe',col:'#20a040',d:'Rains arrows on a target area.'},
+    {n:'Eagle Eye',i:'ðŸ¦…',cd:20,mp:50,dm:10,rng:600,t:'proj',col:'#c0ff80',d:'A single devastating sniper shot.'}
    ]},
-  {id:'necromancer',name:'Necromancer',ico:'💀',role:'Summoner',col:'#408040',
+  {id:'necromancer',name:'Necromancer',ico:'ðŸ’€',role:'Summoner',col:'#408040',
    desc:'Commands the dead. Raises fallen enemies as undead servants and unleashes plague.',
    tags:['Summons','Plague','Life Steal'],
    st:{hp:85,mp:150,atk:10,def:7,spd:3},
    sk:[
-    {n:'Bone Spike',i:'🦴',cd:1,mp:10,dm:1.5,rng:280,t:'proj',col:'#c0c0a0',d:'Fires a bone spike at an enemy.'},
-    {n:'Raise Dead',i:'💀',cd:8,mp:40,dm:0,rng:150,t:'summon',col:'#408040',d:'Raises a fallen enemy as a skeleton.'},
-    {n:'Plague Cloud',i:'🌫️',cd:10,mp:50,dm:2.5,rng:200,t:'aoe',col:'#60a060',d:'Releases a plague that poisons all nearby.'},
-    {n:'Death Coil',i:'🌀',cd:18,mp:65,dm:5.5,rng:350,t:'proj',col:'#20c020',d:'Launches a coil of death energy.'}
+    {n:'Bone Spike',i:'ðŸ¦´',cd:1,mp:10,dm:1.5,rng:280,t:'proj',col:'#c0c0a0',d:'Fires a bone spike at an enemy.'},
+    {n:'Raise Dead',i:'ðŸ’€',cd:8,mp:40,dm:0,rng:150,t:'summon',col:'#408040',d:'Raises a fallen enemy as a skeleton.'},
+    {n:'Plague Cloud',i:'ðŸŒ«ï¸',cd:10,mp:50,dm:2.5,rng:200,t:'aoe',col:'#60a060',d:'Releases a plague that poisons all nearby.'},
+    {n:'Death Coil',i:'ðŸŒ€',cd:18,mp:65,dm:5.5,rng:350,t:'proj',col:'#20c020',d:'Launches a coil of death energy.'}
    ]}
 ];
 
-// ── WORLD ──
+// â”€â”€ WORLD â”€â”€
 var WW=6400,WH=6400;
 var ZONES=[
   {name:'Ashenveil Forest',  x:0,    y:0,    w:2000,h:2000,col:'#0d1a0d',acc:'#1a3a1a',en:'bandit',   ml:1, xl:5 },
@@ -531,14 +531,14 @@ var ZONES=[
   {name:'Celestial Spire',   x:2000, y:4000, w:4400,h:2400,col:'#0a0a1a',acc:'#1a1a3a',en:'seraph',   ml:50,xl:70}
 ];
 var ET={
-  bandit:{name:'Bandit',ico:'🗡️',col:'#c08040',hm:1,dm:1,bty:50,hon:1},
-  marauder:{name:'Marauder',ico:'⚔️',col:'#c04020',hm:1.3,dm:1.2,bty:120,hon:2},
-  icewraith:{name:'Ice Wraith',ico:'❄️',col:'#80c0ff',hm:1.1,dm:1.4,bty:250,hon:3},
-  specter:{name:'Specter',ico:'👻',col:'#80ff80',hm:.9,dm:1.6,bty:500,hon:4},
-  knight:{name:'Dark Knight',ico:'🛡️',col:'#4040c0',hm:2,dm:1.5,bty:1000,hon:5},
-  voidborn:{name:'Voidborn',ico:'🌑',col:'#8000ff',hm:1.8,dm:2,bty:2500,hon:8},
-  dragon:{name:'Dragon',ico:'🐉',col:'#ff4000',hm:4,dm:2.5,bty:8000,hon:15},
-  seraph:{name:'Fallen Seraph',ico:'😇',col:'#ffffa0',hm:3.5,dm:2.2,bty:15000,hon:20}
+  bandit:{name:'Bandit',ico:'ðŸ—¡ï¸',col:'#c08040',hm:1,dm:1,bty:50,hon:1},
+  marauder:{name:'Marauder',ico:'âš”ï¸',col:'#c04020',hm:1.3,dm:1.2,bty:120,hon:2},
+  icewraith:{name:'Ice Wraith',ico:'â„ï¸',col:'#80c0ff',hm:1.1,dm:1.4,bty:250,hon:3},
+  specter:{name:'Specter',ico:'ðŸ‘»',col:'#80ff80',hm:.9,dm:1.6,bty:500,hon:4},
+  knight:{name:'Dark Knight',ico:'ðŸ›¡ï¸',col:'#4040c0',hm:2,dm:1.5,bty:1000,hon:5},
+  voidborn:{name:'Voidborn',ico:'ðŸŒ‘',col:'#8000ff',hm:1.8,dm:2,bty:2500,hon:8},
+  dragon:{name:'Dragon',ico:'ðŸ‰',col:'#ff4000',hm:4,dm:2.5,bty:8000,hon:15},
+  seraph:{name:'Fallen Seraph',ico:'ðŸ˜‡',col:'#ffffa0',hm:3.5,dm:2.2,bty:15000,hon:20}
 };
 function mkEnemies(){
   var list=[];
@@ -572,7 +572,7 @@ function mkDeco(){
   return d;
 }
 
-// ── BOUNTY ──
+// â”€â”€ BOUNTY â”€â”€
 var MAXB=40000000;
 var BRANKS=[
   {m:0,n:'Unknown',c:'#888'},
@@ -598,7 +598,7 @@ function updBounty(b,h){
   g('bbar').style.width=(b/MAXB*100)+'%';
   g('brank').textContent=r.n;g('brank').style.color=r.c;
   var ht=htitle(h);
-  g('hstars').textContent='★'.repeat(ht.s)+'☆'.repeat(5-ht.s);
+  g('hstars').textContent='â˜…'.repeat(ht.s)+'â˜†'.repeat(5-ht.s);
   g('htitle').textContent=ht.t;
 }
 function chkMile(ob,nb){
@@ -613,13 +613,13 @@ function showMile(a){
   setTimeout(function(){g('bmile').classList.add('hide');},3200);
 }
 
-// ── STORY ──
+// â”€â”€ STORY â”€â”€
 var INTRO=[
-  {sp:'The Oracle',ico:'🔮',tx:'The age of silence has ended. Ancient seals are breaking, and the Void stirs once more beneath the Celestial Spire.'},
-  {sp:'The Oracle',ico:'🔮',tx:'You have been chosen — not by fate, but by desperation. The world needs a champion willing to walk the line between legend and infamy.'},
-  {sp:'The Oracle',ico:'🔮',tx:'Your deeds will echo across the realm. Slay the wicked and your honor will grow. But power has a price — the greater your bounty, the more the world will fear you.'},
-  {sp:'The Oracle',ico:'🔮',tx:'Reach a bounty of 40 million gold and you will be known as the most feared being to ever walk this world. Glory or damnation — yours to decide.'},
-  {sp:'The Oracle',ico:'🔮',tx:'Now go. The Ashenveil Forest awaits. Your legend begins with a single step.'}
+  {sp:'The Oracle',ico:'ðŸ”®',tx:'The age of silence has ended. Ancient seals are breaking, and the Void stirs once more beneath the Celestial Spire.'},
+  {sp:'The Oracle',ico:'ðŸ”®',tx:'You have been chosen â€” not by fate, but by desperation. The world needs a champion willing to walk the line between legend and infamy.'},
+  {sp:'The Oracle',ico:'ðŸ”®',tx:'Your deeds will echo across the realm. Slay the wicked and your honor will grow. But power has a price â€” the greater your bounty, the more the world will fear you.'},
+  {sp:'The Oracle',ico:'ðŸ”®',tx:'Reach a bounty of 40 million gold and you will be known as the most feared being to ever walk this world. Glory or damnation â€” yours to decide.'},
+  {sp:'The Oracle',ico:'ðŸ”®',tx:'Now go. The Ashenveil Forest awaits. Your legend begins with a single step.'}
 ];
 var SQ=[];
 function startStory(lines){SQ=lines.slice();nextLine();g('story').classList.remove('hide');}
@@ -635,7 +635,7 @@ function typeIt(el,txt,spd){
 }
 // snxt listener registered in screen flow section below
 
-// ── COMBAT ──
+// â”€â”€ COMBAT â”€â”€
 var projs=[],vfx=[],minions=[],logQ=[];
 function addLog(txt,tp){
   var el=document.createElement('div');el.className='le'+(tp?' '+tp:'');el.textContent=txt;
@@ -752,7 +752,7 @@ function chkLvl(){
   }
 }
 
-// ── GAME STATE ──
+// â”€â”€ GAME STATE â”€â”€
 var cv=g('gc'),ctx=cv.getContext('2d');
 var P=null,ENS=[],DECO=[];
 var keys={},mouse={x:0,y:0,wx:0,wy:0};
@@ -772,7 +772,7 @@ cv.addEventListener('mousemove',function(e){
   if(P){mouse.wx=P.cx+(e.clientX-cv.width/2)/P.zoom;mouse.wy=P.cy+(e.clientY-cv.height/2)/P.zoom;}
 });
 
-// ── SCREEN FLOW ──
+// â”€â”€ SCREEN FLOW â”€â”€
 function safeOn(id,ev,fn){var el=g(id);if(el)el.addEventListener(ev,fn);}
 safeOn('btn-start','click',function(){showScr('s-class');buildCls();});
 safeOn('btn-name','click',startGame);
@@ -783,7 +783,7 @@ safeOn('btn-lu','click',function(){g('lvlup').classList.add('hide');});
 safeOn('btn-save-now','click',function(){saveGame();});
 safeOn('snxt','click',nextLine);
 
-// Continue button removed — save slots handled by loadSlot() called from save-info buttons
+// Continue button removed â€” save slots handled by loadSlot() called from save-info buttons
 
 // Multiplayer panel
 safeOn('btn-mp-open','click',function(){g('mppanel').classList.remove('hide');});
@@ -861,7 +861,7 @@ function buildSkBar(cls){
   }
 }
 
-// ── SKILLS ──
+// â”€â”€ SKILLS â”€â”€
 function doSkill(key){
   if(!P||P.dead)return;
   var map={q:0,w:1,e:2,r:3};
@@ -933,7 +933,7 @@ function doSkill(key){
     }
   } else if(sk.t==='summon'){
     var sa=rnd(0,Math.PI*2);
-    minions.push({x:P.x+Math.cos(sa)*60,y:P.y+Math.sin(sa)*60,hp:60,mhp:60,atk:P.atk*.5,spd:2.5,life:20,at:0,ico:'💀',col:'#40c040'});
+    minions.push({x:P.x+Math.cos(sa)*60,y:P.y+Math.sin(sa)*60,hp:60,mhp:60,atk:P.atk*.5,spd:2.5,life:20,at:0,ico:'ðŸ’€',col:'#40c040'});
     spawnRing(P.x,P.y,80,'#40c040');
     spawnVFX(P.x,P.y,'#40c040',16,5);
     addLog('Skeleton raised!','s');
@@ -947,7 +947,7 @@ function doSkill(key){
   }
 }
 
-// ── AI ──
+// â”€â”€ AI â”€â”€
 function updEnemies(dt){
   var i,e,m,a,d;
   for(i=0;i<ENS.length;i++){
@@ -979,7 +979,7 @@ function updEnemies(dt){
   }
 }
 
-// ── PLAYER UPDATE ──
+// â”€â”€ PLAYER UPDATE â”€â”€
 function updP(dt){
   if(!P||P.dead)return;
   var dx=0,dy=0;
@@ -1001,7 +1001,7 @@ function updP(dt){
   for(var i=P.trail.length-1;i>=0;i--){P.trail[i].l-=dt*4;if(P.trail[i].l<=0)P.trail.splice(i,1);}
 }
 
-// ── RENDER ──
+// â”€â”€ RENDER â”€â”€
 function render(){
   var W=cv.width,H=cv.height;
   ctx.clearRect(0,0,W,H);
@@ -1100,7 +1100,7 @@ function drawP(){
   ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+Math.cos(p.facing)*27,p.y+Math.sin(p.facing)*27);ctx.stroke();
 
-  // ── TITLES ABOVE HEAD ──
+  // â”€â”€ TITLES ABOVE HEAD â”€â”€
   var ht=htitle(p.honor);
   var br=brank(p.bounty);
   var yBase=p.y-30;
@@ -1122,7 +1122,7 @@ function drawP(){
     ctx.textAlign='center';ctx.textBaseline='alphabetic';
     ctx.shadowColor=br.c;ctx.shadowBlur=8;
     ctx.fillStyle=br.c;
-    ctx.fillText('⚔ '+br.n,p.x,yBase-10);
+    ctx.fillText('âš” '+br.n,p.x,yBase-10);
     ctx.shadowBlur=0;
   }
 
@@ -1136,7 +1136,7 @@ function drawP(){
   if(ht.s>0){
     ctx.font='9px serif';
     ctx.fillStyle='#ffd700';
-    ctx.fillText('★'.repeat(ht.s)+'☆'.repeat(5-ht.s),p.x,yBase+10);
+    ctx.fillText('â˜…'.repeat(ht.s)+'â˜†'.repeat(5-ht.s),p.x,yBase+10);
   }
 
   ctx.textBaseline='alphabetic';ctx.textAlign='left';
@@ -1159,7 +1159,7 @@ function drawPrjs(){
   }
 }
 
-// ── HUD UPDATE ──
+// â”€â”€ HUD UPDATE â”€â”€
 function updHUD(){
   if(!P)return;
   g('hname').textContent=P.name;g('hcls').textContent=P.cname;
@@ -1189,7 +1189,7 @@ function updMinimap(){
   mx.fillStyle='#ffd700';mx.beginPath();mx.arc(P.x*sx,P.y*sy,3,0,Math.PI*2);mx.fill();
 }
 
-// ── LOOP ──
+// â”€â”€ LOOP â”€â”€
 function loop(ts){
   if(!running)return;
   if(lt===0)lt=ts;
@@ -1199,16 +1199,16 @@ function loop(ts){
   requestAnimationFrame(loop);
 }
 
-// ── BOSSES ──
+// â”€â”€ BOSSES â”€â”€
 var BOSS_DEFS=[
-  {zone:0,name:'Thornlord',ico:'🌿',col:'#20a020',hp:4000,atk:35,spd:0.7,bty:5000,hon:50,gold:800,xp:500,r:38},
-  {zone:1,name:'Ashbringer',ico:'🔥',col:'#ff6020',hp:6000,atk:50,spd:0.8,bty:12000,hon:80,gold:1500,xp:900,r:40},
-  {zone:2,name:'Glacius Rex',ico:'🧊',col:'#60c0ff',hp:8000,atk:60,spd:0.65,bty:25000,hon:120,gold:2500,xp:1400,r:42},
-  {zone:3,name:'Swamp Wraith',ico:'🌫️',col:'#60ff60',hp:10000,atk:70,spd:0.9,bty:50000,hon:160,gold:3500,xp:2000,r:44},
-  {zone:4,name:'Iron Tyrant',ico:'⚙️',col:'#8080ff',hp:14000,atk:90,spd:0.6,bty:120000,hon:220,gold:5000,xp:3000,r:48},
-  {zone:5,name:'Void Emperor',ico:'🌀',col:'#c000ff',hp:20000,atk:120,spd:0.8,bty:350000,hon:350,gold:8000,xp:5000,r:52},
-  {zone:6,name:'Ignaroth',ico:'🐲',col:'#ff2000',hp:30000,atk:160,spd:0.75,bty:1500000,hon:500,gold:15000,xp:9000,r:60},
-  {zone:7,name:'Seraph Prime',ico:'👼',col:'#ffffff',hp:40000,atk:200,spd:0.85,bty:40000000,hon:1000,gold:30000,xp:20000,r:70,grantMax:true}
+  {zone:0,name:'Thornlord',ico:'ðŸŒ¿',col:'#20a020',hp:4000,atk:35,spd:0.7,bty:5000,hon:50,gold:800,xp:500,r:38},
+  {zone:1,name:'Ashbringer',ico:'ðŸ”¥',col:'#ff6020',hp:6000,atk:50,spd:0.8,bty:12000,hon:80,gold:1500,xp:900,r:40},
+  {zone:2,name:'Glacius Rex',ico:'ðŸ§Š',col:'#60c0ff',hp:8000,atk:60,spd:0.65,bty:25000,hon:120,gold:2500,xp:1400,r:42},
+  {zone:3,name:'Swamp Wraith',ico:'ðŸŒ«ï¸',col:'#60ff60',hp:10000,atk:70,spd:0.9,bty:50000,hon:160,gold:3500,xp:2000,r:44},
+  {zone:4,name:'Iron Tyrant',ico:'âš™ï¸',col:'#8080ff',hp:14000,atk:90,spd:0.6,bty:120000,hon:220,gold:5000,xp:3000,r:48},
+  {zone:5,name:'Void Emperor',ico:'ðŸŒ€',col:'#c000ff',hp:20000,atk:120,spd:0.8,bty:350000,hon:350,gold:8000,xp:5000,r:52},
+  {zone:6,name:'Ignaroth',ico:'ðŸ²',col:'#ff2000',hp:30000,atk:160,spd:0.75,bty:1500000,hon:500,gold:15000,xp:9000,r:60},
+  {zone:7,name:'Seraph Prime',ico:'ðŸ‘¼',col:'#ffffff',hp:40000,atk:200,spd:0.85,bty:40000000,hon:1000,gold:30000,xp:20000,r:70,grantMax:true}
 ];
 var BOSSES=[];
 var activeBoss=null;
@@ -1256,7 +1256,7 @@ function updBosses(dt){
     if(b.aggro&&!P.dead){
       newActive=b;
       // Enrage at 30% HP
-      if(!b.enraged&&b.hp/b.mhp<.3){b.enraged=true;b.spd*=1.6;addLog('⚠ '+b.name+' ENRAGED!','d');}
+      if(!b.enraged&&b.hp/b.mhp<.3){b.enraged=true;b.spd*=1.6;addLog('âš  '+b.name+' ENRAGED!','d');}
       var spd=b.spd*(b.enraged?1:1);
       var a=ang(b,P);b.x+=Math.cos(a)*spd;b.y+=Math.sin(a)*spd;
       b.atimer-=dt;
@@ -1290,7 +1290,7 @@ function updBosses(dt){
   if(newActive&&!newActive.dead){
     activeBoss=newActive;
     g('bossbar').classList.add('on');
-    g('bossname').textContent=(newActive.enraged?'⚠ ':'')+newActive.ico+' '+newActive.name+(newActive.enraged?' [ENRAGED]':'');
+    g('bossname').textContent=(newActive.enraged?'âš  ':'')+newActive.ico+' '+newActive.name+(newActive.enraged?' [ENRAGED]':'');
     g('bossbarfill').style.width=(newActive.hp/newActive.mhp*100)+'%';
     g('bossbarfill').style.background=newActive.enraged?'linear-gradient(90deg,#800000,#ff0000,#ff8080)':'linear-gradient(90deg,#800000,#ff2020,#ff6060)';
   } else if(!newActive){
@@ -1354,12 +1354,12 @@ function drawBosses(){
     ctx.fillRect(b.x-bw/2,b.y-b.r-18,bw*(b.hp/b.mhp),8);
     // Name
     ctx.fillStyle='#ff8080';ctx.font='bold 11px Georgia,serif';
-    ctx.fillText((b.enraged?'⚠ ':'')+b.name,b.x,b.y-b.r-24);
+    ctx.fillText((b.enraged?'âš  ':'')+b.name,b.x,b.y-b.r-24);
     ctx.textBaseline='alphabetic';ctx.textAlign='left';
   }
 }
 
-// ── SAVE / LOAD (20 slots) ──
+// â”€â”€ SAVE / LOAD (20 slots) â”€â”€
 var SAVE_KEY='arcane_dominion_saves';
 var MAX_SAVES=20;
 var activeSaveSlot=0;
@@ -1440,7 +1440,7 @@ function updSaveInfo(){
       if(sv){
         html+='<button onclick="loadSlot('+i+')" style="background:rgba(10,5,25,.9);border:1px solid rgba(200,160,60,.4);border-radius:6px;padding:5px 9px;cursor:pointer;color:#fff;font-family:Georgia,serif;font-size:.65rem;text-align:left">';
         html+='<div style="color:#ffd700;font-weight:bold">'+sv.name+'</div>';
-        html+='<div style="color:rgba(255,255,255,.5)">Lv'+sv.lv+' · '+fmt(sv.bounty)+' bounty</div>';
+        html+='<div style="color:rgba(255,255,255,.5)">Lv'+sv.lv+' Â· '+fmt(sv.bounty)+' bounty</div>';
         html+='<div style="color:rgba(255,255,255,.3);font-size:.58rem">'+fmtDate(sv.ts)+'</div>';
         html+='</button>';
       }
@@ -1466,24 +1466,24 @@ function loadSlot(slot){
 
 updSaveInfo();
 
-// ── SERVERS & MULTIPLAYER ──
+// â”€â”€ SERVERS & MULTIPLAYER â”€â”€
 var SERVERS=[
-  {id:'world-1',   name:'World Server 1',   desc:'General PvE — all welcome',       icon:'🌍', color:'#4080ff'},
-  {id:'world-2',   name:'World Server 2',   desc:'General PvE — all welcome',       icon:'🌎', color:'#4080ff'},
-  {id:'world-3',   name:'World Server 3',   desc:'General PvE — all welcome',       icon:'🌏', color:'#4080ff'},
-  {id:'world-4',   name:'World Server 4',   desc:'General PvE — all welcome',       icon:'🗺️', color:'#4080ff'},
-  {id:'world-5',   name:'World Server 5',   desc:'General PvE — all welcome',       icon:'🌐', color:'#4080ff'},
-  {id:'bounty-1',  name:'Bounty Hunt I',    desc:'PvP — bounty hunters clash',      icon:'⚔️', color:'#ff4040'},
-  {id:'bounty-2',  name:'Bounty Hunt II',   desc:'High stakes — top bounties',      icon:'💀', color:'#ff2020'},
-  {id:'bounty-3',  name:'Bounty Hunt III',  desc:'Ranked — Wanted+ only',           icon:'🎯', color:'#ff6060'},
-  {id:'elite',     name:'Elite Realm',      desc:'Lv 30+ only',                     icon:'👑', color:'#ffd700'},
-  {id:'elite-2',   name:'Elite Realm II',   desc:'Lv 50+ — endgame grind',          icon:'💎', color:'#80ffff'},
-  {id:'casual',    name:'Casual Realm',     desc:'Relaxed — no bounty loss on death',icon:'🌸', color:'#ff80c0'},
-  {id:'dungeon',   name:'Dungeon Co-op',    desc:'Team up for dungeons',            icon:'🏚️', color:'#a060ff'},
-  {id:'hardcore',  name:'Hardcore',         desc:'Permadeath — one life',           icon:'☠️', color:'#ff0000'},
-  {id:'newbie',    name:'Newbie Zone',      desc:'Lv 1-10 — learn the game',        icon:'🌱', color:'#40c060'},
-  {id:'asia',      name:'Asia Server',      desc:'Low latency for Asia players',    icon:'🏯', color:'#ff8040'},
-  {id:'eu',        name:'EU Server',        desc:'Low latency for EU players',      icon:'🏰', color:'#8080ff'}
+  {id:'world-1',   name:'World Server 1',   desc:'General PvE â€” all welcome',       icon:'ðŸŒ', color:'#4080ff'},
+  {id:'world-2',   name:'World Server 2',   desc:'General PvE â€” all welcome',       icon:'ðŸŒŽ', color:'#4080ff'},
+  {id:'world-3',   name:'World Server 3',   desc:'General PvE â€” all welcome',       icon:'ðŸŒ', color:'#4080ff'},
+  {id:'world-4',   name:'World Server 4',   desc:'General PvE â€” all welcome',       icon:'ðŸ—ºï¸', color:'#4080ff'},
+  {id:'world-5',   name:'World Server 5',   desc:'General PvE â€” all welcome',       icon:'ðŸŒ', color:'#4080ff'},
+  {id:'bounty-1',  name:'Bounty Hunt I',    desc:'PvP â€” bounty hunters clash',      icon:'âš”ï¸', color:'#ff4040'},
+  {id:'bounty-2',  name:'Bounty Hunt II',   desc:'High stakes â€” top bounties',      icon:'ðŸ’€', color:'#ff2020'},
+  {id:'bounty-3',  name:'Bounty Hunt III',  desc:'Ranked â€” Wanted+ only',           icon:'ðŸŽ¯', color:'#ff6060'},
+  {id:'elite',     name:'Elite Realm',      desc:'Lv 30+ only',                     icon:'ðŸ‘‘', color:'#ffd700'},
+  {id:'elite-2',   name:'Elite Realm II',   desc:'Lv 50+ â€” endgame grind',          icon:'ðŸ’Ž', color:'#80ffff'},
+  {id:'casual',    name:'Casual Realm',     desc:'Relaxed â€” no bounty loss on death',icon:'ðŸŒ¸', color:'#ff80c0'},
+  {id:'dungeon',   name:'Dungeon Co-op',    desc:'Team up for dungeons',            icon:'ðŸšï¸', color:'#a060ff'},
+  {id:'hardcore',  name:'Hardcore',         desc:'Permadeath â€” one life',           icon:'â˜ ï¸', color:'#ff0000'},
+  {id:'newbie',    name:'Newbie Zone',      desc:'Lv 1-10 â€” learn the game',        icon:'ðŸŒ±', color:'#40c060'},
+  {id:'asia',      name:'Asia Server',      desc:'Low latency for Asia players',    icon:'ðŸ¯', color:'#ff8040'},
+  {id:'eu',        name:'EU Server',        desc:'Low latency for EU players',      icon:'ðŸ°', color:'#8080ff'}
 ];
 
 var peer=null,mpConns=[],mpPeers={};
@@ -1511,7 +1511,7 @@ function joinServer(s){
   g('mp-connected').style.display='flex';
   g('mp-srv-name').textContent=s.icon+' '+s.name;
   initPeer(s.id);
-  addChat('<span style="color:'+s.color+'">Joined '+s.icon+' '+s.name+'</span> — you are now online. Other players on this server can see your ID.','announce');
+  addChat('<span style="color:'+s.color+'">Joined '+s.icon+' '+s.name+'</span> â€” you are now online. Other players on this server can see your ID.','announce');
   // After peer is ready, try to connect to the server lobby anchor
   // The lobby anchor is a well-known ID: "ad-lobby-<serverid>"
   // If it exists (another player is there), we connect to them automatically
@@ -1532,9 +1532,9 @@ function joinServer(s){
       });
     });
     conn.on('error',function(){
-      // No lobby anchor yet — we become the anchor by trying to claim that ID
+      // No lobby anchor yet â€” we become the anchor by trying to claim that ID
       // Just show solo status
-      g('mp-status').textContent='Solo on server — share your ID for others to join';
+      g('mp-status').textContent='Solo on server â€” share your ID for others to join';
     });
   },1500);
 }
@@ -1549,7 +1549,7 @@ g('btn-mpleave').addEventListener('click',function(){
 
 g('btn-custom-srv').addEventListener('click',function(){
   var sid=g('mp-custom-srv').value.trim();if(!sid)return;
-  joinServer({id:sid,name:sid,desc:'Custom server',icon:'🔧',color:'#80c0ff'});
+  joinServer({id:sid,name:sid,desc:'Custom server',icon:'ðŸ”§',color:'#80c0ff'});
 });
 
 function initPeer(serverPrefix){
@@ -1559,7 +1559,7 @@ function initPeer(serverPrefix){
   peer=new Peer(pid,{debug:0});
   peer.on('open',function(id){
     g('mp-myid').textContent=id;
-    g('mp-status').textContent='Ready — share your ID with friends on this server';
+    g('mp-status').textContent='Ready â€” share your ID with friends on this server';
   });
   peer.on('connection',function(conn){
     // Validate same server
@@ -1604,7 +1604,7 @@ function mpHandleData(pid,data){
       }
     }
   } else if(data.type==='nametaken'){
-    // Our name is taken — append a suffix
+    // Our name is taken â€” append a suffix
     if(P){
       P.name=P.name+'_'+Math.floor(Math.random()*99+1);
       addChat('<span style="color:#ff8080">Name conflict! Renamed to: <b>'+P.name+'</b></span>','announce');
@@ -1666,7 +1666,7 @@ function drawPeers(){
     ctx.shadowColor=d.col||'#fff';ctx.shadowBlur=14;
     ctx.fillStyle=d.col||'#fff';ctx.beginPath();ctx.arc(d.x,d.y,18,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
-    ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.ico||'👤',d.x,d.y);
+    ctx.font='18px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.ico||'ðŸ‘¤',d.x,d.y);
 
     // Titles above peer head
     var pht=d.honor?htitle(d.honor):{s:0,t:''};
@@ -1680,15 +1680,15 @@ function drawPeers(){
     if(d.bounty>=10000){
       ctx.font='bold 10px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
       ctx.shadowColor=pbr.c;ctx.shadowBlur=7;ctx.fillStyle=pbr.c;
-      ctx.fillText('⚔ '+pbr.n,d.x,yb-10);ctx.shadowBlur=0;
+      ctx.fillText('âš” '+pbr.n,d.x,yb-10);ctx.shadowBlur=0;
     }
     ctx.font='bold 11px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='alphabetic';
     ctx.fillStyle='rgba(255,255,255,.8)';ctx.fillText(d.name,d.x,yb);
-    if(pht.s>0){ctx.font='9px serif';ctx.fillStyle='#ffd700';ctx.fillText('★'.repeat(pht.s)+'☆'.repeat(5-pht.s),d.x,yb+10);}
+    if(pht.s>0){ctx.font='9px serif';ctx.fillStyle='#ffd700';ctx.fillText('â˜…'.repeat(pht.s)+'â˜†'.repeat(5-pht.s),d.x,yb+10);}
     ctx.textBaseline='alphabetic';ctx.textAlign='left';
   }
 }
-// ── CHAT ──
+// â”€â”€ CHAT â”€â”€
 var chatOpen=false;
 
 function chatTag(){
@@ -1730,11 +1730,11 @@ function bossAnnounce(ev,b){
   var zoneName=ZONES[b.def.zone].name;
   var html,type;
   if(ev==='spawn'){
-    html='<span style="color:#ff6060">⚠ BOSS SPAWNED</span> — '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> has appeared in <b>'+zoneName+'</b>!';
+    html='<span style="color:#ff6060">âš  BOSS SPAWNED</span> â€” '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> has appeared in <b>'+zoneName+'</b>!';
     type='bossup';
   } else {
     var killer=P?chatTag():'Unknown';
-    html='<span style="color:#ffd700">☠ BOSS SLAIN</span> — '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> was defeated by '+killer+' in <b>'+zoneName+'</b>!';
+    html='<span style="color:#ffd700">â˜  BOSS SLAIN</span> â€” '+b.ico+' <b style="color:'+b.col+'">'+b.name+'</b> was defeated by '+killer+' in <b>'+zoneName+'</b>!';
     type='bossdown';
   }
   addChat(html,type);
@@ -1763,7 +1763,7 @@ g('chatinput').addEventListener('keydown',function(e){
   e.stopPropagation(); // prevent game keys while typing
 });
 
-// ── MP TABS ──
+// â”€â”€ MP TABS â”€â”€
 function mpTab(t){
   g('mp-tab-servers').style.display=t==='servers'?'':'none';
   g('mp-tab-friends').style.display=t==='friends'?'':'none';
@@ -1771,7 +1771,7 @@ function mpTab(t){
   g('tab-friends').classList.toggle('on',t==='friends');
 }
 
-// ── FRIENDS ──
+// â”€â”€ FRIENDS â”€â”€
 var FRIENDS_KEY='arcane_friends';
 function getFriends(){try{var r=localStorage.getItem(FRIENDS_KEY);return r?JSON.parse(r):[];}catch(e){return[];}}
 function saveFriends(f){try{localStorage.setItem(FRIENDS_KEY,JSON.stringify(f));}catch(e){}}
@@ -1792,7 +1792,7 @@ function renderFriends(){
     row.style.cssText='display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(200,160,60,.2);border-radius:6px;padding:6px 10px';
     row.innerHTML='<span style="flex:1;font-size:.75rem;color:#fff">'+f.name+'<br><span style="font-size:.6rem;color:rgba(255,255,255,.35)">'+f.id.slice(0,20)+'</span></span>'
       +'<button onclick="connectToFriend(\''+f.id+'\')" style="background:rgba(64,128,255,.2);border:1px solid #4080ff;border-radius:4px;padding:3px 8px;cursor:pointer;color:#80c0ff;font-size:.65rem">Connect</button>'
-      +'<button onclick="removeFriend(\''+f.id+'\')" style="background:rgba(255,64,64,.15);border:1px solid #ff4040;border-radius:4px;padding:3px 8px;cursor:pointer;color:#ff8080;font-size:.65rem">✕</button>';
+      +'<button onclick="removeFriend(\''+f.id+'\')" style="background:rgba(255,64,64,.15);border:1px solid #ff4040;border-radius:4px;padding:3px 8px;cursor:pointer;color:#ff8080;font-size:.65rem">âœ•</button>';
     list.appendChild(row);
   });
 }
@@ -1820,73 +1820,79 @@ mpSetupConn=function(conn){
   });
 };
 
-// ── DUNGEONS ──
+// â”€â”€ DUNGEONS â”€â”€
 // Each dungeon: 10 rounds. Every 5th round (5 and 10) is a boss round.
 // Enemies scale with round number.
 
 var DUNGEONS=[
-  {id:'d0',name:'Crypt of Shadows',icon:'🏚️',col:'#a060ff',minLv:1,
+  {id:'d0',name:'Crypt of Shadows',icon:'ðŸšï¸',col:'#a060ff',minLv:1,
    mobs:[
-    {n:'Skeleton',ico:'💀',col:'#c0c0a0',hp:80,atk:12,spd:1.5,xp:30,gold:5},
-    {n:'Zombie',ico:'🧟',col:'#608060',hp:120,atk:18,spd:1,xp:45,gold:8},
-    {n:'Ghoul',ico:'�',col:'#80a080',hp:100,atk:15,spd:1.8,xp:38,gold:6}
+    {n:'Skeleton',ico:'ðŸ’€',col:'#c0c0a0',hp:80,atk:12,spd:1.5,xp:30,gold:5},
+    {n:'Zombie',ico:'ðŸ§Ÿ',col:'#608060',hp:120,atk:18,spd:1,xp:45,gold:8},
+    {n:'Ghoul',ico:'ï¿½',col:'#80a080',hp:100,atk:15,spd:1.8,xp:38,gold:6}
    ],
    bosses:[
-    {n:'Bone Colossus',ico:'🦴',col:'#e0e0c0',hp:1200,atk:50,spd:1,xp:500,gold:120,boss:true},
-    {n:'Crypt Lord',ico:'👑',col:'#a060ff',hp:3000,atk:80,spd:1.2,xp:1500,gold:400,boss:true}
+    {n:'Bone Colossus',ico:'ðŸ¦´',col:'#e0e0c0',hp:1200,atk:50,spd:1,xp:500,gold:120,boss:true},
+    {n:'Crypt Lord',ico:'ðŸ‘‘',col:'#a060ff',hp:3000,atk:80,spd:1.2,xp:1500,gold:400,boss:true}
    ],
    reward:{gold:500,bounty:2000,honor:20}},
 
-  {id:'d1',name:'Inferno Vault',icon:'🔥',col:'#ff6020',minLv:10,
+  {id:'d1',name:'Inferno Vault',icon:'ðŸ”¥',col:'#ff6020',minLv:10,
    mobs:[
-    {n:'Fire Imp',ico:'😈',col:'#ff6020',hp:180,atk:25,spd:2,xp:60,gold:12},
-    {n:'Lava Golem',ico:'�',col:'#ff4000',hp:280,atk:38,spd:1,xp:90,gold:20},
-    {n:'Ember Wraith',ico:'🔥',col:'#ff8040',hp:220,atk:32,spd:1.8,xp:75,gold:16}
+    {n:'Fire Imp',ico:'ðŸ˜ˆ',col:'#ff6020',hp:180,atk:25,spd:2,xp:60,gold:12},
+    {n:'Lava Golem',ico:'ï¿½',col:'#ff4000',hp:280,atk:38,spd:1,xp:90,gold:20},
+    {n:'Ember Wraith',ico:'ðŸ”¥',col:'#ff8040',hp:220,atk:32,spd:1.8,xp:75,gold:16}
    ],
    bosses:[
-    {n:'Inferno Drake',ico:'🐉',col:'#ff2000',hp:3000,atk:90,spd:1.3,xp:1200,gold:350,boss:true},
-    {n:'Magma Titan',ico:'🌋',col:'#ff4000',hp:7000,atk:140,spd:1,xp:3500,gold:900,boss:true}
+    {n:'Inferno Drake',ico:'ðŸ‰',col:'#ff2000',hp:3000,atk:90,spd:1.3,xp:1200,gold:350,boss:true},
+    {n:'Magma Titan',ico:'ðŸŒ‹',col:'#ff4000',hp:7000,atk:140,spd:1,xp:3500,gold:900,boss:true}
    ],
    reward:{gold:1500,bounty:6000,honor:50}},
 
-  {id:'d2',name:'Void Labyrinth',icon:'🌀',col:'#8000ff',minLv:25,
+  {id:'d2',name:'Void Labyrinth',icon:'ðŸŒ€',col:'#8000ff',minLv:25,
    mobs:[
-    {n:'Void Shade',ico:'🌑',col:'#8000ff',hp:350,atk:50,spd:2.2,xp:150,gold:28},
-    {n:'Rift Stalker',ico:'🌀',col:'#6000c0',hp:420,atk:60,spd:1.8,xp:180,gold:35},
-    {n:'Null Fiend',ico:'⬛',col:'#4000a0',hp:500,atk:70,spd:1.5,xp:200,gold:40}
+    {n:'Void Shade',ico:'ðŸŒ‘',col:'#8000ff',hp:350,atk:50,spd:2.2,xp:150,gold:28},
+    {n:'Rift Stalker',ico:'ðŸŒ€',col:'#6000c0',hp:420,atk:60,spd:1.8,xp:180,gold:35},
+    {n:'Null Fiend',ico:'â¬›',col:'#4000a0',hp:500,atk:70,spd:1.5,xp:200,gold:40}
    ],
    bosses:[
-    {n:'Void Titan',ico:'🌀',col:'#c000ff',hp:8000,atk:150,spd:1.1,xp:4000,gold:1000,boss:true},
-    {n:'Void Emperor',ico:'👁️',col:'#ff00ff',hp:18000,atk:220,spd:1.3,xp:10000,gold:3000,boss:true}
+    {n:'Void Titan',ico:'ðŸŒ€',col:'#c000ff',hp:8000,atk:150,spd:1.1,xp:4000,gold:1000,boss:true},
+    {n:'Void Emperor',ico:'ðŸ‘ï¸',col:'#ff00ff',hp:18000,atk:220,spd:1.3,xp:10000,gold:3000,boss:true}
    ],
    reward:{gold:4000,bounty:20000,honor:100}},
 
-  {id:'d3',name:'Abyssal Depths',icon:'🌊',col:'#00c0ff',minLv:40,
+  {id:'d3',name:'Abyssal Depths',icon:'ðŸŒŠ',col:'#00c0ff',minLv:40,
    mobs:[
-    {n:'Deep Horror',ico:'🦑',col:'#0080c0',hp:600,atk:80,spd:1.8,xp:280,gold:55},
-    {n:'Abyss Leviathan',ico:'🐋',col:'#004080',hp:900,atk:100,spd:1.2,xp:380,gold:75},
-    {n:'Tide Wraith',ico:'🌊',col:'#00a0e0',hp:700,atk:90,spd:2,xp:320,gold:62}
+    {n:'Deep Horror',ico:'ðŸ¦‘',col:'#0080c0',hp:600,atk:80,spd:1.8,xp:280,gold:55},
+    {n:'Abyss Leviathan',ico:'ðŸ‹',col:'#004080',hp:900,atk:100,spd:1.2,xp:380,gold:75},
+    {n:'Tide Wraith',ico:'ðŸŒŠ',col:'#00a0e0',hp:700,atk:90,spd:2,xp:320,gold:62}
    ],
    bosses:[
-    {n:'Kraken',ico:'🦑',col:'#0060a0',hp:15000,atk:180,spd:1,xp:8000,gold:2500,boss:true},
-    {n:'Abyssal God',ico:'🌊',col:'#00ffff',hp:35000,atk:280,spd:1.2,xp:20000,gold:7000,boss:true}
+    {n:'Kraken',ico:'ðŸ¦‘',col:'#0060a0',hp:15000,atk:180,spd:1,xp:8000,gold:2500,boss:true},
+    {n:'Abyssal God',ico:'ðŸŒŠ',col:'#00ffff',hp:35000,atk:280,spd:1.2,xp:20000,gold:7000,boss:true}
    ],
    reward:{gold:8000,bounty:50000,honor:200}},
 
-  {id:'d4',name:'Celestial Spire',icon:'👑',col:'#ffd700',minLv:60,
+  {id:'d4',name:'Celestial Spire',icon:'ðŸ‘‘',col:'#ffd700',minLv:60,
    mobs:[
-    {n:'Fallen Angel',ico:'😇',col:'#ffffa0',hp:1000,atk:130,spd:2,xp:500,gold:100},
-    {n:'Seraph Guard',ico:'⚔️',col:'#ffffff',hp:1400,atk:160,spd:1.6,xp:650,gold:130},
-    {n:'Divine Sentinel',ico:'✨',col:'#ffd700',hp:1200,atk:145,spd:1.8,xp:580,gold:115}
+    {n:'Fallen Angel',ico:'ðŸ˜‡',col:'#ffffa0',hp:1000,atk:130,spd:2,xp:500,gold:100},
+    {n:'Seraph Guard',ico:'âš”ï¸',col:'#ffffff',hp:1400,atk:160,spd:1.6,xp:650,gold:130},
+    {n:'Divine Sentinel',ico:'âœ¨',col:'#ffd700',hp:1200,atk:145,spd:1.8,xp:580,gold:115}
    ],
    bosses:[
-    {n:'Archangel',ico:'👼',col:'#ffffff',hp:30000,atk:250,spd:1.4,xp:15000,gold:5000,boss:true},
-    {n:'Seraph Prime',ico:'👼',col:'#ffffa0',hp:60000,atk:350,spd:1.5,xp:40000,gold:15000,boss:true}
+    {n:'Archangel',ico:'ðŸ‘¼',col:'#ffffff',hp:30000,atk:250,spd:1.4,xp:15000,gold:5000,boss:true},
+    {n:'Seraph Prime',ico:'ðŸ‘¼',col:'#ffffa0',hp:60000,atk:350,spd:1.5,xp:40000,gold:15000,boss:true}
    ],
    reward:{gold:20000,bounty:150000,honor:500}}
 ];
 
 var dungeon={active:false,def:null,wave:0,enemies:[],cleared:false,paused:false};
+
+// Dungeon arena is placed well outside the normal world, one per dungeon slot
+var DUNGEON_ARENAS=[
+  {x:7000,y:1000},{x:7000,y:3000},{x:7000,y:5000},
+  {x:9000,y:1000},{x:9000,y:3000}
+];
 
 function openDungeon(did){
   if(!running){addLog('Start a game first!','d');return;}
@@ -1894,10 +1900,18 @@ function openDungeon(did){
   for(var i=0;i<DUNGEONS.length;i++)if(DUNGEONS[i].id===did){def=DUNGEONS[i];break;}
   if(!def)return;
   if(P&&P.lv<def.minLv){addLog('Need Lv '+def.minLv+' for '+def.name,'d');return;}
+  // Save player's overworld position to return to later
+  dungeon.returnX=P.x;dungeon.returnY=P.y;
+  // Pick arena for this dungeon
+  var arenaIdx=DUNGEONS.indexOf(def);
+  var arena=DUNGEON_ARENAS[arenaIdx]||{x:7000,y:1000};
+  dungeon.arenaX=arena.x;dungeon.arenaY=arena.y;
+  // Teleport player into arena
+  P.x=arena.x;P.y=arena.y;P.cx=arena.x;P.cy=arena.y;
   dungeon.active=true;dungeon.def=def;dungeon.wave=0;dungeon.cleared=false;dungeon.enemies=[];
   // Set CSS color variable
   g('dungeon-overlay').style.setProperty('--dcol',def.col);
-  g('dungeon-overlay').style.display='flex';
+  g('dungeon-overlay').style.display='block';
   g('dungeon-name').textContent=def.icon+' '+def.name;
   g('dungeon-boss-bar').style.display='none';
   g('dungeon-msg').textContent='';
@@ -1906,7 +1920,11 @@ function openDungeon(did){
 }
 
 function closeDungeon(){
-  dungeon.active=false;dungeon.enemies=[];
+  // Return player to overworld position
+  if(P&&dungeon.returnX!==undefined){
+    P.x=dungeon.returnX;P.y=dungeon.returnY;P.cx=P.x;P.cy=P.y;
+  }
+  dungeon.active=false;dungeon.enemies=[];dungeon.cleared=false;
   g('dungeon-overlay').style.display='none';
 }
 
@@ -1921,33 +1939,34 @@ function spawnDungeonWave(){
   var waveNum=dungeon.wave;
   var isBoss=isBossWave(waveNum);
   dungeon.enemies=[];
+  var ax=dungeon.arenaX,ay=dungeon.arenaY;
 
   if(isBoss){
-    // Boss wave: spawn the appropriate boss (wave 5 = boss[0], wave 10 = boss[1])
     var bossIdx=(waveNum+1)===5?0:1;
     var bd=def.bosses[bossIdx];
-    var ex=P.x+rnd(-120,120),ey=P.y+rnd(-120,120);
     dungeon.enemies.push({
       name:bd.n,ico:bd.ico,col:bd.col,
-      x:ex,y:ey,hp:bd.hp,mhp:bd.hp,
+      x:ax+rnd(-100,100),y:ay+rnd(-100,100),
+      hp:bd.hp,mhp:bd.hp,
       atk:bd.atk,spd:bd.spd,xp:bd.xp,gold:bd.gold,
       boss:true,dead:false,atimer:0,stun:0
     });
     g('dungeon-boss-bar').style.display='';
-    g('dungeon-boss-name').textContent='⚠ BOSS: '+bd.n;
+    g('dungeon-boss-name').textContent='âš  BOSS: '+bd.n;
     g('dungeon-boss-fill').style.width='100%';
-    addLog('⚠ BOSS WAVE! '+bd.n+' appears!','d');
+    addLog('âš  BOSS WAVE! '+bd.n+' appears!','d');
   } else {
-    // Normal wave: scale enemy count and HP with wave number
-    var count=2+Math.floor(waveNum*0.8); // 2,2,3,4 enemies per wave
+    var count=2+Math.floor(waveNum*0.8);
     var hpScale=1+waveNum*0.15;
     var atkScale=1+waveNum*0.12;
     for(var i=0;i<count;i++){
       var md=def.mobs[ri(0,def.mobs.length-1)];
-      var ex=P.x+rnd(-200,200),ey=P.y+rnd(-200,200);
+      // Spread enemies in a ring around the arena center
+      var angle=((i/count)*Math.PI*2);
+      var spread=120+rnd(0,60);
       dungeon.enemies.push({
         name:md.n,ico:md.ico,col:md.col,
-        x:ex,y:ey,
+        x:ax+Math.cos(angle)*spread,y:ay+Math.sin(angle)*spread,
         hp:Math.floor(md.hp*hpScale),mhp:Math.floor(md.hp*hpScale),
         atk:Math.floor(md.atk*atkScale),spd:md.spd,
         xp:md.xp,gold:md.gold,
@@ -1961,10 +1980,10 @@ function spawnDungeonWave(){
 }
 
 function updDungeonUI(){
-  if(!dungeon.active)return;
+  if(!dungeon.active&&!dungeon.cleared)return;
   var alive=dungeon.enemies.filter(function(e){return!e.dead;}).length;
   var isBoss=isBossWave(dungeon.wave);
-  g('dungeon-wave').textContent=(isBoss?'⚠ BOSS — ':'')+'Round '+(dungeon.wave+1)+' / 10';
+  g('dungeon-wave').textContent=(isBoss?'âš  BOSS â€” ':'')+'Round '+(dungeon.wave+1)+' / 10';
   g('dungeon-enemies').textContent=alive+' enem'+(alive===1?'y':'ies')+' remaining';
   // Update boss HP bar if boss wave
   if(isBoss&&dungeon.enemies.length>0){
@@ -1988,7 +2007,7 @@ function hitDungeonEnemy(e,dmg){
 }
 
 function updDungeon(dt){
-  if(!dungeon.active||dungeon.cleared)return;
+  if(!dungeon.active||dungeon.cleared||dungeon.wavePaused)return;
   for(var i=0;i<dungeon.enemies.length;i++){
     var e=dungeon.enemies[i];if(e.dead)continue;
     if(e.stun>0){e.stun-=dt;continue;}
@@ -2019,14 +2038,16 @@ function updDungeon(dt){
       g('dungeon-boss-bar').style.display='none';
       g('dungeon-msg').textContent='All 10 rounds complete!';
       addLog('DUNGEON CLEARED: '+dungeon.def.name+'!','o');
-      addChat('<span style="color:#ffd700">'+P.name+' cleared '+dungeon.def.icon+' '+dungeon.def.name+'! 🏆</span>','announce');
+      addChat('<span style="color:#ffd700">'+P.name+' cleared '+dungeon.def.icon+' '+dungeon.def.name+'! ðŸ†</span>','announce');
       saveGame();
+      // Return to overworld after 4 seconds
+      setTimeout(function(){closeDungeon();},4000);
     } else {
       // Brief pause between waves
       g('dungeon-msg').textContent='Wave cleared! Next wave in 2s...';
-      dungeon.active=false; // pause enemy updates
+      dungeon.wavePaused=true;
       setTimeout(function(){
-        dungeon.active=true;
+        dungeon.wavePaused=false;
         g('dungeon-msg').textContent='';
         spawnDungeonWave();
       },2000);
@@ -2057,7 +2078,7 @@ function drawDungeonEnemies(){
   }
 }
 
-// ── DEVICE & MOBILE ──
+// â”€â”€ DEVICE & MOBILE â”€â”€
 var isMobile=false;
 var joystickActive=false,joyStartX=0,joyStartY=0,joyDX=0,joyDY=0;
 
@@ -2192,3 +2213,4 @@ checkOrientation();
 </script>
 </body>
 </html>
+
